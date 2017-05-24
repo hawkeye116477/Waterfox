@@ -325,12 +325,6 @@ public:
     EGLBoolean  fStreamPostD3DTextureNV12ANGLE(EGLDisplay dpy, EGLStreamKHR stream, void* texture, const EGLAttrib* attrib_list) const
         WRAP(   fStreamPostD3DTextureNV12ANGLE(dpy, stream, texture, attrib_list) )
 
-    void           fANGLEPlatformInitialize(angle::Platform* platform) const
-        VOID_WRAP( fANGLEPlatformInitialize(platform) )
-
-    void fANGLEPlatformShutdown() const
-        VOID_WRAP( fANGLEPlatformShutdown() )
-
 #undef WRAP
 #undef VOID_WRAP
 #undef PROFILE_CALL
@@ -486,8 +480,6 @@ private:
                                                                  EGLStreamKHR stream,
                                                                  void* texture,
                                                                  const EGLAttrib* attrib_list);
-        void       (GLAPIENTRY * fANGLEPlatformInitialize)(angle::Platform* platform);
-        void       (GLAPIENTRY * fANGLEPlatformShutdown)();
     } mSymbols;
 
 public:
