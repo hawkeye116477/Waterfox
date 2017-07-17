@@ -186,6 +186,7 @@
               [ 'OS == "win"', {
                 'defines' : [
                     'WIN32',
+                    '_WINSOCK_DEPRECATED_NO_WARNINGS',
                     'USE_ICE',
                     'USE_TURN',
                     'USE_RFC_3489_BACKWARDS_COMPATIBLE',
