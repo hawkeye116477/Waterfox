@@ -840,6 +840,7 @@ nsDocShell::nsDocShell()
   , mDefaultLoadFlags(nsIRequest::LOAD_NORMAL)
   , mFrameType(FRAME_TYPE_REGULAR)
   , mPrivateBrowsingId(0)
+  , mDisplayMode(nsIDocShell::DISPLAY_MODE_BROWSER)
   , mForcedCharset(nullptr)
   , mParentCharset(nullptr)
   , mParentCharsetSource(0)
@@ -15131,4 +15132,34 @@ NS_IMETHODIMP_(void)
 nsDocShell::GetOriginAttributes(mozilla::OriginAttributes& aAttrs)
 {
   aAttrs = mOriginAttributes;
+}
+
+NS_IMETHODIMP
+nsDocShell::GetDisplayMode(uint32_t* aDisplayMode)
+{
+  NS_ENSURE_ARG_POINTER(aDisplayMode);
+  *aDisplayMode = mDisplayMode;
+  return NS_OK;
+}
+
+NS_IMETHODIMP
+nsDocShell::SetDisplayMode(uint32_t aDisplayMode)
+{
+  if (!(aDisplayMode == nsIDocShell::DISPLAY_MODE_BROWSER ||
+        aDisplayMode == nsIDocShell::DISPLAY_MODE_STANDALONE ||
+        aDisplayMode == nsIDocShell::DISPLAY_MODE_FULLSCREEN ||
+        aDisplayMode == nsIDocShell::DISPLAY_MODE_MINIMAL_UI)) {
+    return NS_ERROR_INVALID_ARG;
+  }
+
+  if (aDisplayMode != mDisplayMode) {
+    mDisplayMode = aDisplayMode;
+
+    RefPtr<nsPresContext> presContext;
+    if (NS_SUCCEEDED(GetPresContext(getter_AddRefs(presContext)))) {
+      presContext->MediaFeatureValuesChangedAllDocuments(nsRestyleHint(0));
+    }
+  }
+
+  return NS_OK;
 }
