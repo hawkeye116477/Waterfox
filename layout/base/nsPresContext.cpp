@@ -2157,7 +2157,7 @@ nsPresContext::MediaFeatureValuesChanged(nsRestyleHint aRestyleHint,
     }
 
     // Now iterate our local array of the lists.
-    for (auto mql : localMediaQueryLists) {
+    for (const auto& mql : localMediaQueryLists) {
       nsAutoMicroTask mt;
       mql->MaybeNotify();
     }
