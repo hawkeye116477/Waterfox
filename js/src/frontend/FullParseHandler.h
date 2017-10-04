@@ -217,12 +217,15 @@ class FullParseHandler
         return new_<UnaryNode>(PNK_ARRAYPUSH, pos, kid);
     }
 
+  private:
     ParseNode* newBinary(ParseNodeKind kind, ParseNode* left, ParseNode* right,
                          JSOp op = JSOP_NOP)
     {
         TokenPos pos(left->pn_pos.begin, right->pn_pos.end);
         return new_<BinaryNode>(kind, op, pos, left, right);
     }
+
+  public:
     ParseNode* appendOrCreateList(ParseNodeKind kind, ParseNode* left, ParseNode* right,
                                   ParseContext* pc)
     {
@@ -509,6 +512,10 @@ class FullParseHandler
         return pn;
     }
 
+    ParseNode* newImportSpec(ParseNode* importNameNode, ParseNode* bindingName) {
+        return newBinary(PNK_IMPORT_SPEC, importNameNode, bindingName);
+    }
+
     ParseNode* newExportDeclaration(ParseNode* kid, const TokenPos& pos) {
         return new_<UnaryNode>(PNK_EXPORT, pos, kid);
     }
@@ -526,6 +533,10 @@ class FullParseHandler
     ParseNode* newExportDefaultDeclaration(ParseNode* kid, ParseNode* maybeBinding,
                                            const TokenPos& pos) {
         return new_<BinaryNode>(PNK_EXPORT_DEFAULT, JSOP_NOP, pos, kid, maybeBinding);
+    }
+
+    ParseNode* newExportSpec(ParseNode* bindingName, ParseNode* exportName) {
+        return newBinary(PNK_EXPORT_SPEC, bindingName, exportName);
     }
 
     ParseNode* newExportBatchSpec(const TokenPos& pos) {
@@ -725,10 +736,8 @@ class FullParseHandler
         return newExpr;
     }
 
-    ParseNode* newAssignment(ParseNodeKind kind, ParseNode* lhs, ParseNode* rhs,
-                             JSOp op)
-    {
-        return newBinary(kind, lhs, rhs, op);
+    ParseNode* newAssignment(ParseNodeKind kind, ParseNode* lhs, ParseNode* rhs) {
+        return newBinary(kind, lhs, rhs);
     }
 
     bool isUnparenthesizedYieldExpression(ParseNode* node) {
