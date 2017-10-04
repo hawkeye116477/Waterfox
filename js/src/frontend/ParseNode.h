@@ -1423,6 +1423,27 @@ enum ParseReportKind
     ParseStrictError
 };
 
+enum class AccessorType {
+    None,
+    Getter,
+    Setter
+};
+
+inline JSOp
+AccessorTypeToJSOp(AccessorType atype)
+{
+    switch (atype) {
+      case AccessorType::None:
+        return JSOP_INITPROP;
+      case AccessorType::Getter:
+        return JSOP_INITPROP_GETTER;
+      case AccessorType::Setter:
+        return JSOP_INITPROP_SETTER;
+      default:
+        MOZ_CRASH("unexpected accessor type");
+    }
+}
+
 enum FunctionSyntaxKind
 {
     Expression,
