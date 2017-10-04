@@ -150,6 +150,7 @@ if CONFIG['CC_TYPE'] in ('clang', 'gcc'):
     ]
     if CONFIG['CC_TYPE'] == 'clang':
         CXXFLAGS += [
+            '-Wno-implicit-fallthrough',
             '-Wno-inconsistent-missing-override',
             '-Wno-unused-private-field',
         ]
