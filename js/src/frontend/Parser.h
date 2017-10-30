@@ -734,14 +734,14 @@ class Parser final : public ParserBase, private JS::AutoGCRooter
                     InvokedPrediction invoked = PredictUninvoked);
     Node assignExprWithoutYieldOrAwait(YieldHandling yieldHandling);
     Node yieldExpression(InHandling inHandling);
-    Node condExpr1(InHandling inHandling, YieldHandling yieldHandling,
-                   TripledotHandling tripledotHandling,
-                   PossibleError* possibleError,
-                   InvokedPrediction invoked = PredictUninvoked);
-    Node orExpr1(InHandling inHandling, YieldHandling yieldHandling,
-                 TripledotHandling tripledotHandling,
-                 PossibleError* possibleError,
-                 InvokedPrediction invoked = PredictUninvoked);
+    Node condExpr(InHandling inHandling, YieldHandling yieldHandling,
+                  TripledotHandling tripledotHandling,
+                  PossibleError* possibleError,
+                  InvokedPrediction invoked = PredictUninvoked);
+    Node orExpr(InHandling inHandling, YieldHandling yieldHandling,
+                TripledotHandling tripledotHandling,
+                PossibleError* possibleError,
+                InvokedPrediction invoked = PredictUninvoked);
     Node unaryExpr(YieldHandling yieldHandling, TripledotHandling tripledotHandling,
                    PossibleError* possibleError = nullptr,
                    InvokedPrediction invoked = PredictUninvoked);
