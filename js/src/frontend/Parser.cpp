@@ -122,6 +122,8 @@ DeclarationKindString(DeclarationKind kind)
         return "let";
       case DeclarationKind::Const:
         return "const";
+      case DeclarationKind::Class:
+        return "class";
       case DeclarationKind::Import:
         return "import";
       case DeclarationKind::BodyLevelFunction:
@@ -1575,6 +1577,7 @@ Parser<ParseHandler, CharT>::noteDeclaredName(HandlePropertyName name, Declarati
 
       case DeclarationKind::Let:
       case DeclarationKind::Const:
+      case DeclarationKind::Class:
         // The BoundNames of LexicalDeclaration and ForDeclaration must not
         // contain 'let'. (CatchParameter is the only lexical binding form
         // without this restriction.)
@@ -7368,7 +7371,7 @@ Parser<ParseHandler, CharT>::classDefinition(YieldHandling yieldHandling,
         Node outerName = null();
         if (classContext == ClassStatement) {
             // The outer name is mutable.
-            if (!noteDeclaredName(name, DeclarationKind::Let, namePos))
+            if (!noteDeclaredName(name, DeclarationKind::Class, namePos))
                 return null();
 
             outerName = newName(name, namePos);
