@@ -140,9 +140,6 @@ class MOZ_STACK_CLASS AutoFrontendTraceLog
 
   public:
     AutoFrontendTraceLog(JSContext* cx, const TraceLoggerTextId id,
-                         const char* filename, size_t line, size_t column);
-
-    AutoFrontendTraceLog(JSContext* cx, const TraceLoggerTextId id,
                          const ErrorReporter& reporter);
 
     AutoFrontendTraceLog(JSContext* cx, const TraceLoggerTextId id,
