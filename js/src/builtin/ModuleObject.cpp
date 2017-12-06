@@ -1322,7 +1322,7 @@ ModuleBuilder::processImport(frontend::ParseNode* pn)
 
         uint32_t line;
         uint32_t column;
-        tokenStream_.lineNumAndColumnIndex(spec->pn_left->pn_pos.begin, &line, &column);
+        tokenStream_.lineAndColumnAt(spec->pn_left->pn_pos.begin, &line, &column);
 
         RootedImportEntryObject importEntry(cx_);
         importEntry = ImportEntryObject::create(cx_, module, importName, localName, line, column);
@@ -1460,7 +1460,7 @@ ModuleBuilder::appendExportEntry(HandleAtom exportName, HandleAtom localName, Pa
     uint32_t line = 0;
     uint32_t column = 0;
     if (node)
-        tokenStream_.lineNumAndColumnIndex(node->pn_pos.begin, &line, &column);
+        tokenStream_.lineAndColumnAt(node->pn_pos.begin, &line, &column);
 
     Rooted<ExportEntryObject*> exportEntry(cx_);
     exportEntry = ExportEntryObject::create(cx_, exportName, nullptr, nullptr, localName,
@@ -1474,7 +1474,7 @@ ModuleBuilder::appendExportFromEntry(HandleAtom exportName, HandleAtom moduleReq
 {
     uint32_t line;
     uint32_t column;
-    tokenStream_.lineNumAndColumnIndex(node->pn_pos.begin, &line, &column);
+    tokenStream_.lineAndColumnAt(node->pn_pos.begin, &line, &column);
 
     Rooted<ExportEntryObject*> exportEntry(cx_);
     exportEntry = ExportEntryObject::create(cx_, exportName, moduleRequest, importName, nullptr,
@@ -1490,7 +1490,7 @@ ModuleBuilder::maybeAppendRequestedModule(HandleAtom specifier, ParseNode* node)
 
     uint32_t line;
     uint32_t column;
-    tokenStream_.lineNumAndColumnIndex(node->pn_pos.begin, &line, &column);
+    tokenStream_.lineAndColumnAt(node->pn_pos.begin, &line, &column);
 
     JSContext* cx = cx_;
     RootedRequestedModuleObject req(cx, RequestedModuleObject::create(cx, specifier, line, column));
