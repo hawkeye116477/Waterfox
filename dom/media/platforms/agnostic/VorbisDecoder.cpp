@@ -235,9 +235,10 @@ VorbisDataDecoder::ProcessDecode(MediaRawData* aSample)
     };
 
     if (!mAudioConverter) {
-      AudioConfig in(
-        AudioConfig::ChannelLayout(channels, VorbisLayout(channels)), rate);
-      AudioConfig out(channels, rate);
+      const AudioConfig::ChannelLayout layout =
+        AudioConfig::ChannelLayout(channels, VorbisLayout(channels));
+      AudioConfig in(layout, rate);
+      AudioConfig out(AudioConfig::ChannelLayout::SMPTEDefault(layout), rate);
       if (!in.IsValid() || !out.IsValid()) {
         return DecodePromise::CreateAndReject(
           MediaResult(NS_ERROR_DOM_MEDIA_FATAL_ERR,
@@ -252,8 +253,15 @@ VorbisDataDecoder::ProcessDecode(MediaRawData* aSample)
 
     aTotalFrames += frames;
 
-    results.AppendElement(new AudioData(aOffset, time, duration,
-                                        frames, data.Forget(), channels, rate));
+    results.AppendElement(
+      new AudioData(aOffset,
+                    time,
+                    duration,
+                    frames,
+                    data.Forget(),
+                    channels,
+                    rate,
+                    mAudioConverter->OutputConfig().Layout().Map()));
     mFrames += frames;
     err = vorbis_synthesis_read(&mVorbisDsp, frames);
     if (err) {
