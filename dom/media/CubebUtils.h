@@ -47,7 +47,7 @@ cubeb* GetCubebContextUnlocked();
 void ReportCubebStreamInitFailure(bool aIsFirstStream);
 void ReportCubebBackendUsed();
 uint32_t GetCubebPlaybackLatencyInMilliseconds();
-Maybe<uint32_t> GetCubebMSGLatencyInFrames();
+uint32_t GetCubebMSGLatencyInFrames(cubeb_stream_params * params);
 bool CubebLatencyPrefSet();
 cubeb_channel_layout ConvertChannelMapToCubebLayout(uint32_t aChannelMap);
 #if defined(__ANDROID__) && defined(MOZ_B2G)
