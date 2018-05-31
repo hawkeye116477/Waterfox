@@ -1,5 +1,5 @@
 # Waterfox quick build script
-# Version: 1.0
+# Version: 1.0.4
 
 #!/bin/bash
 
@@ -34,8 +34,6 @@ function ApplyPatches(){
         cd $SourceDir
         patch -Np1 -i $SourceDir/_Plasma_Build/wifi-disentangle.patch
         patch -Np1 -i $SourceDir/_Plasma_Build/wifi-fix-interface.patch
-        patch -Np1 -i $SourceDir/_Plasma_Build/0001-Bug-1384062-Make-SystemResourceMonitor.stop-more-res.patch
-        patch -Np1 -i $SourceDir/_Plasma_Build/glibc-2.26-fix.diff
 				echo >> "$SourceDir/wf_lock"
     else
         echo "Unable to find patches or patches has already been applied!"
