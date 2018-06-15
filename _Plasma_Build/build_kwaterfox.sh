@@ -31,11 +31,10 @@ function testConnection(){
 function ApplyKDE(){
 _patchrev=7339b115a221 # Waterfox 56.0
 	# Download patch if not exist and replace some words
-	if [ ! -f "$SourceDir/_Plasma_Build/waterfoxproject-kde-56.2.0.patch" ] && [ ! -f "$SourceDir/_Plasma_Build/firefox-kde-$VERSION.patch" ]; then
+	if [ ! -f "$SourceDir/_Plasma_Build/firefox-kde-$VERSION.patch" ] && [ ! -f "$SourceDir/_Plasma_Build/firefox-kde-$VERSION.patch" ]; then
 		# Check url next release for changes.	
 			#wget -O $SourceDir/_Plasma_Build/mozilla-kde-$VERSION.patch "http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev/mozilla-kde.patch"
 			wget -O $SourceDir/_Plasma_Build/firefox-kde-$VERSION.patch "http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev/firefox-kde.patch"
-			wget -O $SourceDir/_Plasma_Build/mozilla-ucontext-$VERSION.patch "http://www.rosenauer.org/hg/mozilla/raw-file/$_patchrev/mozilla-ucontext.patch"
 			wget -O $SourceDir/_Plasma_Build/unity-menubar-$VERSION.patch "https://bazaar.launchpad.net/~mozillateam/firefox/firefox.xenial/download/1222/unitymenubar.patch-20130215095938-1n6mqqau8tdfqwhg-1/unity-menubar.patch"
 			#sed -i 's/Firefox/Waterfox/g' $SourceDir/_Plasma_Build/mozilla-kde-$VERSION.patch
 			#sed -i 's/KMOZILLAHELPER/KWATERFOXHELPER/g' $SourceDir/_Plasma_Build/mozilla-kde-$VERSION.patch
@@ -53,7 +52,6 @@ _patchrev=7339b115a221 # Waterfox 56.0
         patch -Np1 -i $SourceDir/_Plasma_Build/fix_waterfox_browser-kde_xul.patch
         patch -Np1 -i $SourceDir/_Plasma_Build/fix_crash_e10s_upload_cancel.patch
         patch -Np1 -i $SourceDir/_Plasma_Build/pgo_fix_missing_kdejs.patch
-        patch -Np1 -i $SourceDir/_Plasma_Build/mozilla-ucontext-$VERSION.patch
         patch -Np1 -i $SourceDir/_Plasma_Build/wifi-disentangle.patch
         patch -Np1 -i $SourceDir/_Plasma_Build/wifi-fix-interface.patch
         patch -Np1 -i $SourceDir/_Plasma_Build/unity-menubar-$VERSION.patch
