@@ -42,6 +42,11 @@ struct AspectRatio {
     return NSCoordSaturatingNonnegativeMultiply(aCoord, mRatio);
   }
 
+  float ApplyToFloat(float aFloat) const {
+    MOZ_DIAGNOSTIC_ASSERT(*this);
+    return mRatio * aFloat;
+  }
+
   // Inverts the ratio, in order to get the height / width ratio.
   MOZ_MUST_USE AspectRatio Inverted() const {
     if (!*this) {
