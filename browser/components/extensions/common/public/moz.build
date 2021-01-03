@@ -3,14 +3,12 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
-DIRS += [
-    'public',
-    'src',
-    'saxparser'
+XPIDL_SOURCES += [
+    'nsIComponentManagerExtra.idl',
 ]
 
-JAR_MANIFESTS += ['jar.mn']
+XPIDL_MODULE = 'browsercompsbase'
 
-XPCSHELL_TESTS_MANIFESTS += [
-    'test/xpcshell/xpcshell.ini',
+EXPORTS += [
+    'nsCommonBaseCID.h'
 ]
