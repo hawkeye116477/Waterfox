@@ -60,6 +60,8 @@ if test -f "$HOME/.mozbuild/sccache/sccache"; then
 	ac_add_options --with-ccache=$HOME/.mozbuild/sccache/sccache
 fi
 
+ac_add_options --with-ccache=sccache
+
 export MOZ_INCLUDE_SOURCE_INFO=1
 export MOZ_REQUIRE_SIGNING=0
 
