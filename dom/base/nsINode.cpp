@@ -3074,21 +3074,21 @@ already_AddRefed<nsINode> nsINode::CloneAndAdopt(
     // Don't allow importing/adopting nodes from non-privileged "scriptable"
     // documents to "non-scriptable" documents.
     Document* newDoc = nodeInfoManager->GetDocument();
-    if (NS_WARN_IF(!newDoc)) {
-      aError.Throw(NS_ERROR_UNEXPECTED);
-      return nullptr;
-    }
+    // if (NS_WARN_IF(!newDoc)) {
+    //   aError.Throw(NS_ERROR_UNEXPECTED);
+    //   return nullptr;
+    // }
     bool hasHadScriptHandlingObject = false;
     if (!newDoc->GetScriptHandlingObject(hasHadScriptHandlingObject) &&
         !hasHadScriptHandlingObject) {
       Document* currentDoc = aNode->OwnerDoc();
-      if (NS_WARN_IF(!nsContentUtils::IsChromeDoc(currentDoc) &&
-                     (currentDoc->GetScriptHandlingObject(
-                          hasHadScriptHandlingObject) ||
-                      hasHadScriptHandlingObject))) {
-        aError.Throw(NS_ERROR_UNEXPECTED);
-        return nullptr;
-      }
+      // if (NS_WARN_IF(!nsContentUtils::IsChromeDoc(currentDoc) &&
+      //                (currentDoc->GetScriptHandlingObject(
+      //                     hasHadScriptHandlingObject) ||
+      //                 hasHadScriptHandlingObject))) {
+      //   aError.Throw(NS_ERROR_UNEXPECTED);
+      //   return nullptr;
+      // }
     }
 
     newNodeInfo = nodeInfoManager->GetNodeInfo(
