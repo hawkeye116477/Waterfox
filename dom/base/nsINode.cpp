@@ -3378,19 +3378,12 @@ void nsINode::Adopt(nsNodeInfoManager* aNewNodeInfoManager,
       // This is a temporary solution for Bug 1590526 to only limit
       // the restriction to chrome level documents because web extensions
       // rely on content to content node adoption.
-      if (nsContentUtils::IsChromeDoc(afterAdoptDoc) ||
-          nsContentUtils::IsChromeDoc(beforeAdoptDoc)) {
-        return aError.ThrowSecurityError(
-            "Adopting nodes across docgroups in chrome documents "
-            "is unsupported");
-      } else {
         if (StaticPrefs::dom_arena_allocator_enabled_AtStartup()) {
           if (DOMArena* arena =
                   NodeInfo()->NodeInfoManager()->GetArenaAllocator()) {
             nsContentUtils::AddEntryToDOMArenaTable(this, arena);
           }
         }
-      }
     }
   }
 
