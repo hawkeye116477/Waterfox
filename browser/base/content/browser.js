@@ -9016,9 +9016,9 @@ TabModalPromptBox.prototype = {
   },
 
   appendPrompt(args, onCloseCallback) {
-    let browser = this.browser;
-    let newPrompt = new TabModalPrompt(browser.ownerGlobal);
+    let newPrompt = new TabModalPrompt(window);
 
+    let browser = this.browser;
     if (args.modalType === Ci.nsIPrompt.MODAL_TYPE_TAB) {
       newPrompt.element.classList.add("tab-prompt");
       this._tabPrompts.set(newPrompt.element, newPrompt);
