@@ -49,12 +49,10 @@ void ReportCubebBackendUsed();
 uint32_t GetCubebPlaybackLatencyInMilliseconds();
 uint32_t GetCubebMSGLatencyInFrames(cubeb_stream_params * params);
 bool CubebLatencyPrefSet();
-cubeb_channel_layout ConvertChannelMapToCubebLayout(uint32_t aChannelMap);
 #if defined(__ANDROID__) && defined(MOZ_B2G)
 cubeb_stream_type ConvertChannelToCubebType(dom::AudioChannel aChannel);
 #endif
 void GetCurrentBackend(nsAString& aBackend);
-void GetPreferredChannelLayout(nsAString& aLayout);
 void GetDeviceCollection(nsTArray<RefPtr<AudioDeviceInfo>>& aDeviceInfos,
                          Side aSide);
 } // namespace CubebUtils

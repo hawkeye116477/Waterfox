@@ -99,7 +99,6 @@ private:
   DECL_MEDIA_PREF("media.resampling.enabled",                 AudioSinkResampling, bool, false);
   DECL_MEDIA_PREF("media.resampling.rate",                    AudioSinkResampleRate, uint32_t, 48000);
 #if defined(XP_WIN) || defined(XP_DARWIN) || defined(MOZ_PULSEAUDIO)
-  // libcubeb backend implement .get_preferred_channel_layout
   DECL_MEDIA_PREF("media.forcestereo.enabled",                AudioSinkForceStereo, bool, false);
 #else
   DECL_MEDIA_PREF("media.forcestereo.enabled",                AudioSinkForceStereo, bool, true);

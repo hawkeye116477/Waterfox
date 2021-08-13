@@ -575,7 +575,6 @@ var dataProviders = {
                    getInterface(Ci.nsIDOMWindowUtils);
     data.currentAudioBackend = winUtils.currentAudioBackend;
     data.currentMaxAudioChannels = winUtils.currentMaxAudioChannels;
-    data.currentPreferredChannelLayout = winUtils.currentPreferredChannelLayout;
     data.currentPreferredSampleRate = winUtils.currentPreferredSampleRate;
     data.audioOutputDevices = convertDevices(winUtils.audioDevices(Ci.nsIDOMWindowUtils.AUDIO_OUTPUT).
                                              QueryInterface(Ci.nsIArray));
