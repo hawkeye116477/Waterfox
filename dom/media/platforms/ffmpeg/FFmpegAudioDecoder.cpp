@@ -119,6 +119,8 @@ CopyAndPackAudio(AVFrame* aFrame, uint32_t aNumChannels, uint32_t aNumAFrames)
   return audio;
 }
 
+typedef AudioConfig::ChannelLayout ChannelLayout;
+
 RefPtr<MediaDataDecoder::DecodePromise>
 FFmpegAudioDecoder<LIBAV_VER>::ProcessDecode(MediaRawData* aSample)
 {
@@ -203,9 +205,14 @@ FFmpegAudioDecoder<LIBAV_VER>::ProcessDecode(MediaRawData* aSample)
           __func__);
       }
 
-      results.AppendElement(new AudioData(
-        samplePosition, pts, duration,
-        mFrame->nb_samples, Move(audio), numChannels, samplingRate));
+      results.AppendElement(new AudioData(samplePosition,
+                                          pts,
+                                          duration,
+                                          mFrame->nb_samples,
+                                          Move(audio),
+                                          numChannels,
+                                          samplingRate,
+                                          mCodecContext->channel_layout));
 
       pts = newpts;
     }
