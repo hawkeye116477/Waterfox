@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <memory>
 #include "cubeb/cubeb.h"
+//#define ENABLE_NORMAL_LOG
+//#define ENABLE_VERBOSE_LOG
 #include "common.h"
 
 TEST(cubeb, latency)
@@ -34,7 +36,8 @@ TEST(cubeb, latency)
     CUBEB_SAMPLE_FLOAT32NE,
     preferred_rate,
     max_channels,
-    CUBEB_LAYOUT_UNDEFINED
+    CUBEB_LAYOUT_UNDEFINED,
+    CUBEB_STREAM_PREF_NONE
   };
   r = cubeb_get_min_latency(ctx, &params, &latency_frames);
   ASSERT_TRUE(r == CUBEB_OK || r == CUBEB_ERROR_NOT_SUPPORTED);

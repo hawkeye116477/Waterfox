@@ -13,7 +13,8 @@ SOURCES += [
     'cubeb_log.cpp',
     'cubeb_mixer.cpp',
     'cubeb_panner.cpp',
-    'cubeb_strings.c'
+    'cubeb_strings.c',
+    'cubeb_utils.cpp'
 ]
 
 if CONFIG['MOZ_ALSA']:
@@ -28,10 +29,6 @@ if CONFIG['MOZ_PULSEAUDIO'] or CONFIG['MOZ_JACK']:
     ]
 
 if CONFIG['MOZ_PULSEAUDIO']:
-    SOURCES += [
-        'cubeb_pulse.c',
-    ]
-    DEFINES['USE_PULSE'] = True
     DEFINES['USE_PULSE_RUST'] = True
 
 if CONFIG['MOZ_JACK']:
@@ -59,6 +56,8 @@ if CONFIG['OS_TARGET'] == 'Darwin':
             'cubeb_osx_run_loop.c',
         ]
     DEFINES['USE_AUDIOUNIT'] = True
+    if CONFIG['MOZ_AUDIOUNIT_RUST']:
+        DEFINES['USE_AUDIOUNIT_RUST'] = True
 
 if CONFIG['OS_TARGET'] == 'WINNT':
     SOURCES += [
@@ -66,26 +65,28 @@ if CONFIG['OS_TARGET'] == 'WINNT':
         'cubeb_wasapi.cpp',
         'cubeb_winmm.c',
     ]
+    DEFINES['UNICODE'] = True
     DEFINES['USE_WINMM'] = True
     DEFINES['USE_WASAPI'] = True
     OS_LIBS += [
       "avrt",
     ]
-    if CONFIG['_MSC_VER']:
-        CXXFLAGS += ['-wd4005'] # C4005: '_USE_MATH_DEFINES' : macro redefinition
+    if CONFIG['CC_TYPE'] == 'clang-cl':
+        CXXFLAGS += ['-Wno-macro-redefined'] # '_USE_MATH_DEFINES' : macro redefinition
+
 
 if CONFIG['OS_TARGET'] == 'Android':
+    SOURCES += ['cubeb_aaudio.cpp']
     SOURCES += ['cubeb_opensl.c']
     SOURCES += ['cubeb_resampler.cpp']
+    SOURCES += ['cubeb-jni.cpp']
     DEFINES['USE_OPENSL'] = True
-    SOURCES += [
-        'cubeb_audiotrack.c',
-    ]
-    DEFINES['USE_AUDIOTRACK'] = True
+    DEFINES['USE_AAUDIO'] = True
 
 FINAL_LIBRARY = 'gkmedias'
 
 CFLAGS += CONFIG['MOZ_ALSA_CFLAGS']
+CFLAGS += CONFIG['MOZ_JACK_CFLAGS']
 CFLAGS += CONFIG['MOZ_PULSEAUDIO_CFLAGS']
 
 # We allow warnings for third-party code that can be updated from upstream.

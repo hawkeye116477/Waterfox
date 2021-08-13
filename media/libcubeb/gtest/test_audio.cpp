@@ -17,8 +17,11 @@
 #include <memory>
 #include <string.h>
 #include "cubeb/cubeb.h"
-#include "common.h"
 #include <string>
+
+//#define ENABLE_NORMAL_LOG
+//#define ENABLE_VERBOSE_LOG
+#include "common.h"
 
 using namespace std;
 
@@ -94,7 +97,7 @@ int supports_channel_count(string backend_id, int nchannels)
     (backend_id != "opensl" && backend_id != "audiotrack");
 }
 
-int run_test(int num_channels, layout_info layout, int sampling_rate, int is_float)
+int run_test(int num_channels, int sampling_rate, int is_float)
 {
   int r = CUBEB_OK;
 
@@ -116,13 +119,14 @@ int run_test(int num_channels, layout_info layout, int sampling_rate, int is_flo
     return CUBEB_OK;
   }
 
-  fprintf(stderr, "Testing %d channel(s), layout: %s, %d Hz, %s (%s)\n", num_channels, layout.name, sampling_rate, is_float ? "float" : "short", cubeb_get_backend_id(ctx));
+  fprintf(stderr, "Testing %d channel(s), %d Hz, %s (%s)\n", num_channels, sampling_rate, is_float ? "float" : "short", cubeb_get_backend_id(ctx));
 
   cubeb_stream_params params;
   params.format = is_float ? CUBEB_SAMPLE_FLOAT32NE : CUBEB_SAMPLE_S16NE;
   params.rate = sampling_rate;
   params.channels = num_channels;
-  params.layout = layout.layout;
+  params.layout = CUBEB_LAYOUT_UNDEFINED;
+  params.prefs = CUBEB_STREAM_PREF_NONE;
 
   synth_state synth(params.channels, params.rate);
 
@@ -144,7 +148,7 @@ int run_test(int num_channels, layout_info layout, int sampling_rate, int is_flo
   return r;
 }
 
-int run_panning_volume_test(int is_float)
+int run_volume_test(int is_float)
 {
   int r = CUBEB_OK;
 
@@ -171,6 +175,7 @@ int run_panning_volume_test(int is_float)
   params.rate = 44100;
   params.channels = 2;
   params.layout = CUBEB_LAYOUT_STEREO;
+  params.prefs = CUBEB_STREAM_PREF_NONE;
 
   synth_state synth(params.channels, params.rate);
 
@@ -198,29 +203,17 @@ int run_panning_volume_test(int is_float)
     delay(100);
   }
 
-  fprintf(stderr, "Testing: panning\n");
-  for(int i=-4;i <= 4; ++i)
-  {
-    fprintf(stderr, "Panning: %.2f\n", i/4.0f);
-
-    cubeb_stream_set_panning(stream, i/4.0f);
-    cubeb_stream_start(stream);
-    delay(400);
-    cubeb_stream_stop(stream);
-    delay(100);
-  }
-
   return r;
 }
 
-TEST(cubeb, run_panning_volume_test_short)
+TEST(cubeb, run_volume_test_short)
 {
-  ASSERT_EQ(run_panning_volume_test(0), CUBEB_OK);
+  ASSERT_EQ(run_volume_test(0), CUBEB_OK);
 }
 
-TEST(cubeb, run_panning_volume_test_float)
+TEST(cubeb, run_volume_test_float)
 {
-  ASSERT_EQ(run_panning_volume_test(1), CUBEB_OK);
+  ASSERT_EQ(run_volume_test(1), CUBEB_OK);
 }
 
 TEST(cubeb, run_channel_rate_test)
@@ -244,12 +237,8 @@ TEST(cubeb, run_channel_rate_test)
     for(auto freq : freq_values) {
       ASSERT_TRUE(channels < MAX_NUM_CHANNELS);
       fprintf(stderr, "--------------------------\n");
-      for (auto layout : layout_infos) {
-        if (layout.channels == channels) {
-          ASSERT_EQ(run_test(channels, layout, freq, 0), CUBEB_OK);
-          ASSERT_EQ(run_test(channels, layout, freq, 1), CUBEB_OK);
-        }
-      }
+      ASSERT_EQ(run_test(channels, freq, 0), CUBEB_OK);
+      ASSERT_EQ(run_test(channels, freq, 1), CUBEB_OK);
     }
   }
 }

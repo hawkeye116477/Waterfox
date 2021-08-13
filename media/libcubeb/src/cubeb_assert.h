@@ -1,17 +1,27 @@
-/* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
-/* vim:set ts=2 sw=2 sts=2 et cindent: */
-/* This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+/*
+ * Copyright © 2017 Mozilla Foundation
+ *
+ * This program is made available under an ISC-style license.  See the
+ * accompanying file LICENSE for details.
+ */
 
 #ifndef CUBEB_ASSERT
 #define CUBEB_ASSERT
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <mozilla/Assertions.h>
 
-/* Forward fatal asserts to MOZ_RELEASE_ASSERT when built inside Gecko. */
-#define XASSERT(expr) MOZ_RELEASE_ASSERT(expr)
+/**
+ * This allow using an external release assert method. This file should only
+ * export a function or macro called XASSERT that aborts the program.
+ */
+
+#define XASSERT(expr)                                                          \
+  do {                                                                         \
+    if (!(expr)) {                                                             \
+      fprintf(stderr, "%s:%d - fatal error: %s\n", __FILE__, __LINE__, #expr); \
+      abort();                                                                 \
+    }                                                                          \
+  } while (0)
 
 #endif

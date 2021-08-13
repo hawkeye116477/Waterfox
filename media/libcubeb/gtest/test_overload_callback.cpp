@@ -15,6 +15,8 @@
 #include <memory>
 #include <atomic>
 #include "cubeb/cubeb.h"
+//#define ENABLE_NORMAL_LOG
+//#define ENABLE_VERBOSE_LOG
 #include "common.h"
 
 #define SAMPLE_FREQUENCY 48000
@@ -68,6 +70,7 @@ TEST(cubeb, overload_callback)
   output_params.rate = 48000;
   output_params.channels = 2;
   output_params.layout = CUBEB_LAYOUT_STEREO;
+  output_params.prefs = CUBEB_STREAM_PREF_NONE;
 
   r = cubeb_get_min_latency(ctx, &output_params, &latency_frames);
   ASSERT_EQ(r, CUBEB_OK);

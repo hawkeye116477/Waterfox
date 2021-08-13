@@ -16,8 +16,12 @@
 #include <memory>
 #include <limits.h>
 #include "cubeb/cubeb.h"
-#include "common.h"
 #include <atomic>
+
+//#define ENABLE_NORMAL_LOG
+//#define ENABLE_VERBOSE_LOG
+#include "common.h"
+
 
 #define SAMPLE_FREQUENCY 48000
 #define STREAM_FORMAT CUBEB_SAMPLE_S16LE
@@ -95,6 +99,7 @@ TEST(cubeb, tone)
   params.rate = SAMPLE_FREQUENCY;
   params.channels = 1;
   params.layout = CUBEB_LAYOUT_MONO;
+  params.prefs = CUBEB_STREAM_PREF_NONE;
 
   std::unique_ptr<cb_user_data> user_data(new cb_user_data());
   ASSERT_TRUE(!!user_data) << "Error allocating user data";
@@ -109,7 +114,7 @@ TEST(cubeb, tone)
     cleanup_stream_at_exit(stream, cubeb_stream_destroy);
 
   cubeb_stream_start(stream);
-  delay(500);
+  delay(5000);
   cubeb_stream_stop(stream);
 
   ASSERT_TRUE(user_data->position.load());
