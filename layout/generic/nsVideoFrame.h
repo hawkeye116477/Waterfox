@@ -55,7 +55,7 @@ public:
 
   /* get the size of the video's display */
   nsSize GetVideoIntrinsicSize(gfxContext *aRenderingContext);
-  nsSize GetIntrinsicRatio() override;
+  mozilla::AspectRatio GetIntrinsicRatio() override;
   mozilla::LogicalSize
   ComputeSize(gfxContext *aRenderingContext,
               mozilla::WritingMode aWritingMode,

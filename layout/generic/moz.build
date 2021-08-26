@@ -107,6 +107,7 @@ EXPORTS += [
 ]
 
 EXPORTS.mozilla += [
+    'AspectRatio.h',
     'CSSAlignUtils.h',
     'CSSOrderAwareFrameIterator.h',
     'FrameTypeList.h',

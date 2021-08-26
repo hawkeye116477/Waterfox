@@ -83,7 +83,7 @@ public:
   virtual nscoord GetMinISize(gfxContext *aRenderingContext) override;
   virtual nscoord GetPrefISize(gfxContext *aRenderingContext) override;
   virtual mozilla::IntrinsicSize GetIntrinsicSize() override;
-  virtual nsSize GetIntrinsicRatio() override;
+  virtual mozilla::AspectRatio GetIntrinsicRatio() override;
   virtual void Reflow(nsPresContext*           aPresContext,
                       ReflowOutput&     aDesiredSize,
                       const ReflowInput& aReflowInput,
@@ -334,7 +334,7 @@ private:
   nsCOMPtr<imgIContainer> mPrevImage;
   nsSize mComputedSize;
   mozilla::IntrinsicSize mIntrinsicSize;
-  nsSize mIntrinsicRatio;
+  mozilla::AspectRatio mIntrinsicRatio;
 
   bool mDisplayingIcon;
   bool mFirstFrameComplete;

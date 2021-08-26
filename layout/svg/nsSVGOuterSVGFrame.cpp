@@ -233,9 +233,16 @@ nsSVGOuterSVGFrame::GetIntrinsicSize()
   return intrinsicSize;
 }
 
-/* virtual */ nsSize
+/* virtual */ AspectRatio
 nsSVGOuterSVGFrame::GetIntrinsicRatio()
 {
+  // When 'contain: size' is implemented, make sure to check for it.
+  /*
+  if (this->GetContent->GetParent() && this->StyleDisplay()->IsContainSize()) {
+    return AspectRatio();
+  }
+ */
+
   // We only have an intrinsic size/ratio if our width and height attributes
   // are both specified and set to non-percentage values, or we have a viewBox
   // rect: http://www.w3.org/TR/SVGMobile12/coords.html#IntrinsicSizing
@@ -250,16 +257,8 @@ nsSVGOuterSVGFrame::GetIntrinsicRatio()
     content->mLengthAttributes[SVGSVGElement::ATTR_HEIGHT];
 
   if (!width.IsPercentage() && !height.IsPercentage()) {
-    nsSize ratio(
-      nsPresContext::CSSPixelsToAppUnits(width.GetAnimValue(content)),
-      nsPresContext::CSSPixelsToAppUnits(height.GetAnimValue(content)));
-    if (ratio.width < 0) {
-      ratio.width = 0;
-    }
-    if (ratio.height < 0) {
-      ratio.height = 0;
-    }
-    return ratio;
+    return AspectRatio::FromSize(width.GetAnimValue(content),
+                                 height.GetAnimValue(content));
   }
 
   SVGViewElement* viewElement = content->GetCurrentViewElement();
@@ -273,17 +272,7 @@ nsSVGOuterSVGFrame::GetIntrinsicRatio()
   }
 
   if (viewbox) {
-    float viewBoxWidth = viewbox->width;
-    float viewBoxHeight = viewbox->height;
-
-    if (viewBoxWidth < 0.0f) {
-      viewBoxWidth = 0.0f;
-    }
-    if (viewBoxHeight < 0.0f) {
-      viewBoxHeight = 0.0f;
-    }
-    return nsSize(nsPresContext::CSSPixelsToAppUnits(viewBoxWidth),
-                  nsPresContext::CSSPixelsToAppUnits(viewBoxHeight));
+    return AspectRatio::FromSize(viewbox->width, viewbox->height);
   }
 
   return nsSVGDisplayContainerFrame::GetIntrinsicRatio();

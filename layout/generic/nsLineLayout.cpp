@@ -774,7 +774,7 @@ IsPercentageAware(const nsIFrame* aFrame)
     //   is calculated from the constraint equation used for
     //   block-level, non-replaced elements in normal flow.
     nsIFrame *f = const_cast<nsIFrame*>(aFrame);
-    if (f->GetIntrinsicRatio() != nsSize(0, 0) &&
+    if (f->GetIntrinsicRatio() &&
         // Some percents are treated like 'auto', so check != coord
         pos->mHeight.GetUnit() != eStyleUnit_Coord) {
       const IntrinsicSize &intrinsicSize = f->GetIntrinsicSize();

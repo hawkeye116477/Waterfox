@@ -4079,7 +4079,7 @@ nsLayoutUtils::GetTextShadowRectsUnion(const nsRect& aTextAndDecorationsRect,
 enum ObjectDimensionType { eWidth, eHeight };
 static nscoord
 ComputeMissingDimension(const nsSize& aDefaultObjectSize,
-                        const nsSize& aIntrinsicRatio,
+                        const AspectRatio& aIntrinsicRatio,
                         const Maybe<nscoord>& aSpecifiedWidth,
                         const Maybe<nscoord>& aSpecifiedHeight,
                         ObjectDimensionType aDimensionToCompute)
@@ -4090,21 +4090,15 @@ ComputeMissingDimension(const nsSize& aDefaultObjectSize,
   // 1. "If the object has an intrinsic aspect ratio, the missing dimension of
   //     the concrete object size is calculated using the intrinsic aspect
   //     ratio and the present dimension."
-  if (aIntrinsicRatio.width > 0 && aIntrinsicRatio.height > 0) {
+  if (aIntrinsicRatio) {
     // Fill in the missing dimension using the intrinsic aspect ratio.
-    nscoord knownDimensionSize;
-    float ratio;
     if (aDimensionToCompute == eWidth) {
-      knownDimensionSize = *aSpecifiedHeight;
-      ratio = aIntrinsicRatio.width / aIntrinsicRatio.height;
-    } else {
-      knownDimensionSize = *aSpecifiedWidth;
-      ratio = aIntrinsicRatio.height / aIntrinsicRatio.width;
+      return aIntrinsicRatio.ApplyTo(*aSpecifiedHeight);
     }
-    return NSCoordSaturatingNonnegativeMultiply(knownDimensionSize, ratio);
+    return aIntrinsicRatio.Inverted().ApplyTo(*aSpecifiedWidth);
   }
 
-  // 2. "Otherwise, if the missing dimension is present in the object’s
+  // 2. "Otherwise, if the missing dimension is present in the object's
   //     intrinsic dimensions, [...]"
   // NOTE: *Skipping* this case, because we already know it's not true -- we're
   // in this function because the missing dimension is *not* present in
@@ -4142,7 +4136,7 @@ ComputeMissingDimension(const nsSize& aDefaultObjectSize,
 static Maybe<nsSize>
 MaybeComputeObjectFitNoneSize(const nsSize& aDefaultObjectSize,
                               const IntrinsicSize& aIntrinsicSize,
-                              const nsSize& aIntrinsicRatio)
+                              const AspectRatio& aIntrinsicRatio)
 {
   // "If the object has an intrinsic height or width, its size is resolved as
   // if its intrinsic dimensions were given as the specified size."
@@ -4189,15 +4183,13 @@ MaybeComputeObjectFitNoneSize(const nsSize& aDefaultObjectSize,
 static nsSize
 ComputeConcreteObjectSize(const nsSize& aConstraintSize,
                           const IntrinsicSize& aIntrinsicSize,
-                          const nsSize& aIntrinsicRatio,
+                          const AspectRatio& aIntrinsicRatio,
                           uint8_t aObjectFit)
 {
   // Handle default behavior (filling the container) w/ fast early return.
   // (Also: if there's no valid intrinsic ratio, then we have the "fill"
   // behavior & just use the constraint size.)
-  if (MOZ_LIKELY(aObjectFit == NS_STYLE_OBJECT_FIT_FILL) ||
-      aIntrinsicRatio.width == 0 ||
-      aIntrinsicRatio.height == 0) {
+  if (MOZ_LIKELY(aObjectFit == NS_STYLE_OBJECT_FIT_FILL) || !aIntrinsicRatio) {
     return aConstraintSize;
   }
 
@@ -4284,7 +4276,7 @@ HasInitialObjectFitAndPosition(const nsStylePosition* aStylePos)
 /* static */ nsRect
 nsLayoutUtils::ComputeObjectDestRect(const nsRect& aConstraintRect,
                                      const IntrinsicSize& aIntrinsicSize,
-                                     const nsSize& aIntrinsicRatio,
+                                     const AspectRatio& aIntrinsicRatio,
                                      const nsStylePosition* aStylePos,
                                      nsPoint* aAnchorPoint)
 {
@@ -5187,10 +5179,12 @@ nsLayoutUtils::IntrinsicForAxis(PhysicalAxis              aAxis,
            styleMinBSize.GetCoordValue() == 0)) ||
         styleMaxBSize.GetUnit() != eStyleUnit_None) {
 
-      nsSize ratio(aFrame->GetIntrinsicRatio());
-      nscoord ratioISize = (horizontalAxis ? ratio.width  : ratio.height);
-      nscoord ratioBSize = (horizontalAxis ? ratio.height : ratio.width);
-      if (ratioBSize != 0) {
+      AspectRatio ratio = aFrame->GetIntrinsicRatio();
+      if (ratio) {
+        // Convert 'ratio' if necessary, so that it's storing ISize/BSize:
+        if (!horizontalAxis) {
+          ratio = ratio.Inverted();
+        }
         AddStateBitToAncestors(aFrame,
             NS_FRAME_DESCENDANT_INTRINSIC_ISIZE_DEPENDS_ON_BSIZE);
 
@@ -5206,14 +5200,14 @@ nsLayoutUtils::IntrinsicForAxis(PhysicalAxis              aAxis,
             (aPercentageBasis.isNothing() &&
              GetPercentBSize(styleBSize, aFrame, horizontalAxis, h))) {
           h = std::max(0, h - bSizeTakenByBoxSizing);
-          result = NSCoordMulDiv(h, ratioISize, ratioBSize);
+          result = ratio.ApplyTo(h);
         }
 
         if (GetDefiniteSize(styleMaxBSize, aFrame, !isInlineAxis, aPercentageBasis, &h) ||
             (aPercentageBasis.isNothing() &&
              GetPercentBSize(styleMaxBSize, aFrame, horizontalAxis, h))) {
           h = std::max(0, h - bSizeTakenByBoxSizing);
-          nscoord maxISize = NSCoordMulDiv(h, ratioISize, ratioBSize);
+          nscoord maxISize = ratio.ApplyTo(h);
           if (maxISize < result) {
             result = maxISize;
           }
@@ -5226,7 +5220,7 @@ nsLayoutUtils::IntrinsicForAxis(PhysicalAxis              aAxis,
             (aPercentageBasis.isNothing() &&
              GetPercentBSize(styleMinBSize, aFrame, horizontalAxis, h))) {
           h = std::max(0, h - bSizeTakenByBoxSizing);
-          nscoord minISize = NSCoordMulDiv(h, ratioISize, ratioBSize);
+          nscoord minISize = ratio.ApplyTo(h);
           if (minISize > result) {
             result = minISize;
           }
@@ -6695,7 +6689,7 @@ nsLayoutUtils::DrawSingleImage(gfxContext&            aContext,
 /* static */ void
 nsLayoutUtils::ComputeSizeForDrawing(imgIContainer *aImage,
                                      CSSIntSize&    aImageSize, /*outparam*/
-                                     nsSize&        aIntrinsicRatio, /*outparam*/
+                                     AspectRatio&   aIntrinsicRatio, /*outparam*/
                                      bool&          aGotWidth,  /*outparam*/
                                      bool&          aGotHeight  /*outparam*/)
 {
@@ -6708,7 +6702,7 @@ nsLayoutUtils::ComputeSizeForDrawing(imgIContainer *aImage,
     // decoded) and should return zero size.
     aGotWidth = aGotHeight = true;
     aImageSize = CSSIntSize(0, 0);
-    aIntrinsicRatio = nsSize(0, 0);
+    aIntrinsicRatio = AspectRatio();
   }
 }
 
@@ -6717,7 +6711,7 @@ nsLayoutUtils::ComputeSizeForDrawingWithFallback(imgIContainer* aImage,
                                                  const nsSize&  aFallbackSize)
 {
   CSSIntSize imageSize;
-  nsSize imageRatio;
+  AspectRatio imageRatio;
   bool gotHeight, gotWidth;
   ComputeSizeForDrawing(aImage, imageSize, imageRatio, gotWidth, gotHeight);
 
@@ -6725,19 +6719,13 @@ nsLayoutUtils::ComputeSizeForDrawingWithFallback(imgIContainer* aImage,
   // intrinsic ratio of the image.
   if (gotWidth != gotHeight) {
     if (!gotWidth) {
-      if (imageRatio.height != 0) {
-        imageSize.width =
-          NSCoordSaturatingNonnegativeMultiply(imageSize.height,
-                                               float(imageRatio.width) /
-                                               float(imageRatio.height));
+      if (imageRatio) {
+        imageSize.width = imageRatio.ApplyTo(imageSize.height);
         gotWidth = true;
       }
     } else {
-      if (imageRatio.width != 0) {
-        imageSize.height =
-          NSCoordSaturatingNonnegativeMultiply(imageSize.width,
-                                               float(imageRatio.height) /
-                                               float(imageRatio.width));
+      if (imageRatio) {
+        imageSize.height = imageRatio.Inverted().ApplyTo(imageSize.width);
         gotHeight = true;
       }
     }

@@ -3043,10 +3043,10 @@ ComputeDrawnSizeForBackground(const CSSSizeOrRatio& aIntrinsicSize,
                                          aBgPositioningArea.width);
     if (!isRepeatRoundInBothDimensions &&
         aLayerSize.mHeightType == nsStyleImageLayers::Size::DimensionType::eAuto) {
-      // Restore intrinsic rato
-      if (aIntrinsicSize.mRatio.width) {
-        float scale = float(aIntrinsicSize.mRatio.height) / aIntrinsicSize.mRatio.width;
-        imageSize.height = NSCoordSaturatingNonnegativeMultiply(imageSize.width, scale);
+      // Restore intrinsic ratio
+      if (aIntrinsicSize.mRatio) {
+        imageSize.height =
+            aIntrinsicSize.mRatio.Inverted().ApplyTo(imageSize.width);
       }
     }
   }
@@ -3059,10 +3059,9 @@ ComputeDrawnSizeForBackground(const CSSSizeOrRatio& aIntrinsicSize,
                                          aBgPositioningArea.height);
     if (!isRepeatRoundInBothDimensions &&
         aLayerSize.mWidthType == nsStyleImageLayers::Size::DimensionType::eAuto) {
-      // Restore intrinsic rato
-      if (aIntrinsicSize.mRatio.height) {
-        float scale = float(aIntrinsicSize.mRatio.width) / aIntrinsicSize.mRatio.height;
-        imageSize.width = NSCoordSaturatingNonnegativeMultiply(imageSize.height, scale);
+      // Restore intrinsic ratio
+      if (aIntrinsicSize.mRatio) {
+        imageSize.width = aIntrinsicSize.mRatio.ApplyTo(imageSize.height);
       }
     }
   }

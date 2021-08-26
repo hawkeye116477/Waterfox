@@ -49,7 +49,7 @@ public:
   nscoord GetPrefISize(gfxContext *aRenderingContext) override;
 
   mozilla::IntrinsicSize GetIntrinsicSize() override;
-  nsSize  GetIntrinsicRatio() override;
+  mozilla::AspectRatio GetIntrinsicRatio() override;
 
   mozilla::LogicalSize
   ComputeAutoSize(gfxContext*                 aRenderingContext,

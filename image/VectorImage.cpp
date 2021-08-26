@@ -634,7 +634,7 @@ VectorImage::GetIntrinsicSize(nsSize* aSize)
 
 //******************************************************************************
 NS_IMETHODIMP
-VectorImage::GetIntrinsicRatio(nsSize* aRatio)
+VectorImage::GetIntrinsicRatio(AspectRatio* aRatio)
 {
   if (mError || !mIsFullyLoaded) {
     return NS_ERROR_FAILURE;

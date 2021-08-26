@@ -141,7 +141,6 @@ NS_IMPL_FRAMEARENA_HELPERS(nsImageFrame)
 nsImageFrame::nsImageFrame(nsStyleContext* aContext, ClassID aID)
   : nsAtomicContainerFrame(aContext, aID)
   , mComputedSize(0, 0)
-  , mIntrinsicRatio(0, 0)
   , mDisplayingIcon(false)
   , mFirstFrameComplete(false)
   , mReflowCallbackPosted(false)
@@ -337,11 +336,11 @@ nsImageFrame::UpdateIntrinsicRatio(imgIContainer* aImage)
   if (!aImage)
     return false;
 
-  nsSize oldIntrinsicRatio = mIntrinsicRatio;
+  AspectRatio oldIntrinsicRatio = mIntrinsicRatio;
 
   // Set intrinsic ratio to match aImage's reported intrinsic ratio.
   if (NS_FAILED(aImage->GetIntrinsicRatio(&mIntrinsicRatio)))
-    mIntrinsicRatio.SizeTo(0, 0);
+    mIntrinsicRatio = AspectRatio();
 
   return mIntrinsicRatio != oldIntrinsicRatio;
 }
@@ -568,7 +567,7 @@ nsImageFrame::OnSizeAvailable(imgIRequest* aRequest, imgIContainer* aImage)
     // Have to size to 0,0 so that GetDesiredSize recalculates the size.
     mIntrinsicSize.width.SetCoordValue(0);
     mIntrinsicSize.height.SetCoordValue(0);
-    mIntrinsicRatio.SizeTo(0, 0);
+    mIntrinsicRatio = AspectRatio();
     intrinsicSizeChanged = true;
   }
 
@@ -695,7 +694,7 @@ nsImageFrame::NotifyNewCurrentRequest(imgIRequest *aRequest,
     // Have to size to 0,0 so that GetDesiredSize recalculates the size
     mIntrinsicSize.width.SetCoordValue(0);
     mIntrinsicSize.height.SetCoordValue(0);
-    mIntrinsicRatio.SizeTo(0, 0);
+    mIntrinsicRatio = AspectRatio();
   }
 
   if (mState & IMAGE_GOTINITIALREFLOW) { // do nothing if we haven't gotten the initial reflow yet
@@ -842,7 +841,7 @@ nsImageFrame::EnsureIntrinsicSizeAndRatio()
               ICON_SIZE + (2 * (ICON_PADDING + ALT_BORDER_WIDTH)));
           mIntrinsicSize.width.SetCoordValue(edgeLengthToUse);
           mIntrinsicSize.height.SetCoordValue(edgeLengthToUse);
-          mIntrinsicRatio.SizeTo(1, 1);
+          mIntrinsicRatio = AspectRatio(1.0f);
         }
       }
     }
@@ -966,7 +965,7 @@ nsImageFrame::GetIntrinsicSize()
   return mIntrinsicSize;
 }
 
-/* virtual */ nsSize
+/* virtual */ AspectRatio
 nsImageFrame::GetIntrinsicRatio()
 {
   return mIntrinsicRatio;
