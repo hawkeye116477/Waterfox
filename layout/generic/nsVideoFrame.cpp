@@ -628,9 +628,8 @@ nsVideoFrame::ComputeSize(gfxContext *aRenderingContext,
   intrinsicSize.height.SetCoordValue(size.height);
 
   // Only video elements have an intrinsic ratio.
-  auto intrinsicRatio = HasVideoElement()
-                            ? AspectRatio::FromSize(size)
-                            : AspectRatio();
+  auto intrinsicRatio =
+    HasVideoElement() ? AspectRatio::FromSize(size) : AspectRatio();
 
   return ComputeSizeWithIntrinsicDimensions(aRenderingContext, aWM,
                                             intrinsicSize, intrinsicRatio,

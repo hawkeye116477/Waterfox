@@ -391,7 +391,8 @@ nsImageBoxFrame::PaintImage(gfxContext& aRenderingContext,
 }
 
 nsRect
-nsImageBoxFrame::GetDestRect(const nsPoint& aOffset, Maybe<nsPoint>& aAnchorPoint)
+nsImageBoxFrame::GetDestRect(const nsPoint& aOffset,
+                             Maybe<nsPoint>& aAnchorPoint)
 {
   nsCOMPtr<imgIContainer> imgCon;
   mImageRequest->GetImage(getter_AddRefs(imgCon));
@@ -418,8 +419,7 @@ nsImageBoxFrame::GetDestRect(const nsPoint& aOffset, Maybe<nsPoint>& aAnchorPoin
       // Image has a valid size; use it as intrinsic size & ratio.
       intrinsicSize.width.SetCoordValue(mIntrinsicSize.width);
       intrinsicSize.height.SetCoordValue(mIntrinsicSize.height);
-      intrinsicRatio =
-          AspectRatio::FromSize(mIntrinsicSize);
+      intrinsicRatio = AspectRatio::FromSize(mIntrinsicSize);
     } else {
       // Image doesn't have a (valid) intrinsic size.
       // Try to look up intrinsic ratio and use that at least.

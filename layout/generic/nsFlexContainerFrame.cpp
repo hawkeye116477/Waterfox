@@ -1372,8 +1372,8 @@ MainSizeFromAspectRatio(nscoord aCrossSize,
   MOZ_ASSERT(aIntrinsicRatio,
              "Invalid ratio; will divide by 0! Caller should've checked...");
   AspectRatio ratio = aAxisTracker.IsMainAxisHorizontal()
-                          ? aIntrinsicRatio
-                          : aIntrinsicRatio.Inverted();
+                        ? aIntrinsicRatio
+                        : aIntrinsicRatio.Inverted();
 
   return ratio.ApplyTo(aCrossSize);
 }
