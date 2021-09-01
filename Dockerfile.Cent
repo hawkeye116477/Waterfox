@@ -1,0 +1,3 @@
+FROM centos:7 
+RUN yum -y update
+RUN yum -y install llvm-toolset-7.0-clang-devel llvm-toolset-7.0-llvm-devel git python2-devel alsa-lib-devel autoconf213

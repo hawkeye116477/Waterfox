@@ -1,0 +1,28 @@
+name: Build Docker images
+
+on:
+  workflow_dispatch: null
+  schedule:
+    - cron: "55 23 * * 6"
+
+jobs:
+  docker_vichs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: Dockerfile.Cent
+          push: true
+          tags: |
+            ghcr.io/hawkeye116477/waterfox_docker_img:latest
+ 
