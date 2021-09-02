@@ -36,7 +36,7 @@ jobs:
           file: Dockerfile.Cent
           push: true
           tags: |
-            ghcr.io/${{ env.REPO }}/waterfox_docker_img:latest
+            ghcr.io/${{ env.REPO }}_docker_img:latest
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new,mode=max
       - # Temp fix

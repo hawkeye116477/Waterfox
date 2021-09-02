@@ -4,42 +4,72 @@ on:
   pull_request:
     branches:
       - classic
-  workflow_dispatch:
+  workflow_dispatch: null
+
+env:
+  ENABLE_ARTIFACTS_MODE: "true"
+  MOZCONFIG: "./.mozconfig-ga"
+  SHELL: "/bin/bash"
 
 jobs:
-    buildLinux:
-        env:
-            ENABLE_ARTIFACTS_MODE: "true"
-            MOZCONFIG: "./.mozconfig-ga"
-            SHELL: "/bin/bash"
-        runs-on: ubuntu-18.04
-        container:
-          image: ghcr.io/hawkeye116477/waterfox_docker_img:latest
-        steps:
-          - name: Checkout branch
-            uses: actions/checkout@v2
-          - name: Cache for Linux
-            uses: actions/cache@v2
-            with:
-              path: |
-                ~/.ccache
-              key: ${{ runner.os }}-${{ hashFiles('**/browser/config/version_display.txt') }}
-          - name: Cleanup useless paths
-            run: |
-              sudo rm -rf /usr/share/dotnet
-              sudo rm -rf /opt/ghc
-              sudo rm -rf /usr/local/share/boost
-              sudo rm -rf "$AGENT_TOOLSDIRECTORY"
-          - name: Mach build
-            run: |
-              ./mach build
-          - name: Mach package
-            run: |
-              ./mach package
-            if: env.ENABLE_ARTIFACTS_MODE == 'true'
-          - name: Upload Linux artifact
-            uses: actions/upload-artifact@v2
-            with:
-              name: Artifact Classic Linux ${{ github.run_id }}
-              path: ./objdir-*/dist/*.tar.bz2
-            if: env.ENABLE_ARTIFACTS_MODE == 'true'
+  linux:
+    runs-on: ubuntu-18.04
+    container:
+      image: ghcr.io/hawkeye116477/waterfox_docker_img:latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v2
+      - name: Cache for Linux
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.ccache
+          key: ${{ runner.os }}-${{ hashFiles('**/browser/config/version_display.txt') }}
+      - name: Build
+        run: |
+          ./mach build
+      - name: Package
+        run: |
+          ./mach package
+        if: env.ENABLE_ARTIFACTS_MODE == 'true'
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Artifact Classic Linux ${{ github.run_id }}
+          path: ./objdir-*/dist/*.tar.bz2
+        if: env.ENABLE_ARTIFACTS_MODE == 'true'
+  mac:
+    runs-on: macos-10.15
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v2
+      - name: Cache for macOS
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/Library/Caches/ccache
+          key: ${{ runner.os }}-${{ hashFiles('**/browser/config/version_display.txt') }}
+      - name: Set up Xcode version
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "11.2.1"
+      - name: Brew dependencies
+        run: |
+          brew update
+          brew install autoconf@2.13 ccache make nasm yasm
+      - name: Get SDK
+        run: |
+          wget https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.12.sdk.tar.xz
+          tar -xvf MacOSX10.12.sdk.tar.xz
+      - name: Build
+        run: |
+          ./mach build
+      - name: Package
+        run: |
+          ./mach package
+      - name: Upload macOS artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: Artifact Classic macOS ${{ github.run_id }}
+          path: ./objdir-*/dist/*.dmg
+        if: env.ENABLE_ARTIFACTS_MODE == 'true'

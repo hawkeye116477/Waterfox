@@ -1,27 +1,29 @@
 FROM centos:7
-ENV LLVM_version="7.0"
-ENV PATH="/opt/rh/rh-nodejs10/root/usr/bin/node/:${PATH}"
+ENV LLVM_version="9.0"
 ENV nasm_version="2.15.05"
-SHELL ["/bin/bash", "-c"]
-RUN yum install -y centos-release-scl-rh epel-release
+ENV node_version="10"
+ENV PATH="/opt/rh/rh-nodejs${node_version}/root/usr/bin:${PATH}"
+RUN yum install -y "deltarpm" "centos-release-scl-rh" "epel-release"
 RUN yum -y install "perl(Env)" "autoconf" "automake" "asciidoc" "xmlto" "gcc" "make" "xz" "wget"
+RUN wget -O "/etc/yum.repos.d/" "https://download.opensuse.org/repositories/home:hawkeye116477:waterfox:build-depends/CentOS_7/home:hawkeye116477:waterfox:build-depends.repo"
 #
 # Install Springdale SCL repo, which contains newer llvm toolchains (8, 9, 10 and 11)
-# ENV SPRINGDALE_SCL="springdale-SCL-7-2.sdl7.1.noarch.rpm"
-# RUN yum -y install "rpm2cpio" "bsdtar"
-# RUN wget "http://springdale.princeton.edu/data/springdale/7/x86_64/os/Packages/${SPRINGDALE_SCL}"
-# RUN rpm2cpio "${SPRINGDALE_SCL}" | bsdtar -xf -
-# RUN rm -rf "${SPRINGDALE_SCL}"
-# RUN rpm --import "http://springdale.princeton.edu/data/springdale/7/x86_64/os/RPM-GPG-KEY-springdale"
+ENV SPRINGDALE_SCL="springdale-SCL-7-2.sdl7.1.noarch.rpm"
+RUN yum -y install "rpm2cpio" "bsdtar"
+RUN wget "http://springdale.princeton.edu/data/springdale/7/x86_64/os/Packages/${SPRINGDALE_SCL}"
+RUN rpm2cpio "${SPRINGDALE_SCL}" | bsdtar -xf -
+RUN rm -rf "${SPRINGDALE_SCL}"
+RUN rpm --import "http://springdale.princeton.edu/data/springdale/7/x86_64/os/RPM-GPG-KEY-springdale"
+RUN yum repolist
 #
 RUN yum -y update
-RUN yum -y install "llvm-toolset-${LLVM_version}-clang" "llvm-toolset-${LLVM_version}-llvm-devel"
+RUN yum -y install "clang-devel" "llvm-devel" "rh-nodejs${node_version}-nodejs"
 # Fix clang package, help find it LLVM libs
-RUN cp -R "/opt/rh/llvm-toolset-${LLVM_version}/root/usr/" "/"
-RUN rm -rf /opt/rh/llvm-toolset-${LLVM_version}/*
 RUN clang --version
 #
-RUN yum -y install "pkgconfig" "git" "python2-devel" "python36" "alsa-lib-devel" "autoconf" "pkgconfig(gl)" "pkgconfig(dbus-glib-1)" "rust" "cargo" "libnotify-devel" "libproxy-devel" "startup-notification-devel" "unzip" "zip" "pkgconfig(xt)" "yasm" "pkgconfig(gdk-x11-2.0)" "pkgconfig(glib-2.0)" "pkgconfig(gobject-2.0)" "pkgconfig(gtk+-2.0)" "pkgconfig(gtk+-3.0)" "pkgconfig(gtk+-unix-print-2.0)" "pkgconfig(gtk+-unix-print-3.0)" "libcurl-devel" "pkgconfig(libffi)" "pkgconfig(libpulse)" "pkgconfig(jack)" "rh-nodejs10-nodejs" "libdrm-devel"
+RUN node --version
+#
+RUN yum -y install "ccache" "which" "pkgconfig" "python2-devel" "python36" "alsa-lib-devel" "autoconf213" "pkgconfig(gl)" "pkgconfig(dbus-glib-1)" "rust" "cargo" "libnotify-devel" "libproxy-devel" "startup-notification-devel" "unzip" "zip" "pkgconfig(xt)" "yasm" "pkgconfig(gdk-x11-2.0)" "pkgconfig(glib-2.0)" "pkgconfig(gobject-2.0)" "pkgconfig(gtk+-2.0)" "pkgconfig(gtk+-3.0)" "pkgconfig(gtk+-unix-print-2.0)" "pkgconfig(gtk+-unix-print-3.0)" "libcurl-devel" "pkgconfig(libffi)" "pkgconfig(libpulse)" "pkgconfig(jack)" "libdrm-devel" "pkgconfig(gconf-2.0)" "git"
 RUN cargo install cbindgen
 # Build nasm
 RUN mkdir -p ~/nasm/
@@ -35,3 +37,5 @@ RUN make install
 WORKDIR "$HOME"
 RUN nasm --version
 RUN rm -rf ./nasm/*
+RUN mkdir -p /usr/lib/nasm-mozilla/bin
+RUN ln -sf /usr/bin/nasm /usr/lib/nasm-mozilla/bin/nasm
