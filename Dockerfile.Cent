@@ -5,7 +5,7 @@ ENV node_version="10"
 ENV PATH="/opt/rh/rh-nodejs${node_version}/root/usr/bin:${PATH}"
 RUN yum install -y "deltarpm" "centos-release-scl-rh" "epel-release"
 RUN yum -y install "perl(Env)" "autoconf" "automake" "asciidoc" "xmlto" "gcc" "make" "xz" "wget"
-RUN wget -O "/etc/yum.repos.d/" "https://download.opensuse.org/repositories/home:hawkeye116477:waterfox:build-depends/CentOS_7/home:hawkeye116477:waterfox:build-depends.repo"
+RUN wget -O "/etc/yum.repos.d/hawkeye116477_bdepends.repo" "https://download.opensuse.org/repositories/home:hawkeye116477:waterfox:build-depends/CentOS_7/home:hawkeye116477:waterfox:build-depends.repo"
 #
 # Install Springdale SCL repo, which contains newer llvm toolchains (8, 9, 10 and 11)
 ENV SPRINGDALE_SCL="springdale-SCL-7-2.sdl7.1.noarch.rpm"
