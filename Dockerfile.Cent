@@ -2,24 +2,25 @@ FROM centos:7
 ENV LLVM_version="8.0"
 ENV nasm_version="2.15.05"
 ENV node_version="10"
-ENV PATH="/opt/rh/rh-nodejs${node_version}/root/usr/bin:${PATH}"
+ENV PATH="/opt/rh/devtoolset-9/root/usr/bin:/opt/rh/llvm-toolset-${LLVM_version}/root/usr/bin:opt/rh/rh-nodejs${node_version}/root/usr/bin:${PATH}"
+ENV LD_LIBRARY_PATH="/opt/rh/devtoolset-8/root/usr/lib:/opt/rh/devtoolset-8/root/usr/lib64:${LD_LIBRARY_PATH}"
 RUN yum install -y "deltarpm" "centos-release-scl-rh" "epel-release"
-RUN yum -y install "perl(Env)" "autoconf" "automake" "asciidoc" "xmlto" "gcc" "make" "xz" "wget"
+RUN yum -y install "perl(Env)" "autoconf" "automake" "asciidoc" "xmlto" "make" "xz" "wget"
 RUN wget -O "/etc/yum.repos.d/hawkeye116477_bdepends.repo" "https://download.opensuse.org/repositories/home:hawkeye116477:waterfox:build-depends/CentOS_7/home:hawkeye116477:waterfox:build-depends.repo"
 #
 # Install Springdale SCL repo, which contains newer llvm toolchains (8, 9, 10 and 11)
-# ENV SPRINGDALE_SCL="springdale-SCL-7-2.sdl7.1.noarch.rpm"
-# RUN yum -y install "rpm2cpio" "bsdtar"
-# RUN wget "http://springdale.princeton.edu/data/springdale/7/x86_64/os/Packages/${SPRINGDALE_SCL}"
-# RUN rpm2cpio "${SPRINGDALE_SCL}" | bsdtar -xf -
-# RUN rm -rf "${SPRINGDALE_SCL}"
-# RUN rpm --import "http://springdale.princeton.edu/data/springdale/7/x86_64/os/RPM-GPG-KEY-springdale"
-# RUN yum repolist
+ENV SPRINGDALE_SCL="springdale-SCL-7-2.sdl7.1.noarch.rpm"
+RUN yum -y install "rpm2cpio" "bsdtar"
+RUN wget "http://springdale.princeton.edu/data/springdale/7/x86_64/os/Packages/${SPRINGDALE_SCL}"
+RUN rpm2cpio "${SPRINGDALE_SCL}" | bsdtar -xf -
+RUN rm -rf "${SPRINGDALE_SCL}"
+RUN rpm --import "http://springdale.princeton.edu/data/springdale/7/x86_64/os/RPM-GPG-KEY-springdale"
+RUN yum repolist
 #
 RUN yum -y update
 # RUN yum -y install "llvm-toolset-${LLVM_version}-clang" "llvm-toolset-${LLVM_version}-llvm-devel"
 RUN yum -y install "rh-nodejs${node_version}-nodejs"
-RUN yum -y install "clang-devel" "llvm-devel"
+RUN yum -y install "llvm-toolset-${LLVM_version}-clang-devel" "llvm-devel"
 # RUN mkdir -p "/tmp/llvm"
 # RUN wget -O "/tmp/llvm/clang+llvm-7.1.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz" "https://github.com/llvm/llvm-project/releases/download/llvmorg-7.1.0/clang+llvm-7.1.0-x86_64-linux-gnu-ubuntu-14.04.tar.xz"
 # WORKDIR "/tmp/llvm"
@@ -28,11 +29,12 @@ RUN yum -y install "clang-devel" "llvm-devel"
 # RUN rm -rf /tmp/llvm/*
 # Fix clang package, help find it LLVM libs
 # RUN scl enable llvm-toolset-${LLVM_version} 'bash'
-# RUN ln -sf /opt/rh/llvm-toolset-${LLVM_version}/root/usr/lib64/*.so /usr/lib64/
-# RUN ln -sf /opt/rh/llvm-toolset-${LLVM_version}/root/usr/lib64/*.so.* /usr/lib64/
-# RUN mkdir -p /usr/lib64/{clang,llvm,cmake}/
-# RUN mkdir -p /usr/include/{clang,clang-c,llvm,llvm-c}/
-# RUN ln -sf /opt/rh/llvm-toolset-${LLVM_version}/root/usr/lib64/clang/ /usr/lib64/clang/
+RUN ln -sf /opt/rh/llvm-toolset-${LLVM_version}/root/usr/lib64/*.so /usr/lib64/
+RUN ln -sf /opt/rh/llvm-toolset-${LLVM_version}/root/usr/lib64/*.so.* /usr/lib64/
+RUN mkdir -p /usr/lib64/{clang,llvm,cmake}/
+RUN mkdir -p /usr/include/{clang,clang-c,llvm,llvm-c,c++}/
+RUN ln -sf /opt/rh/llvm-toolset-${LLVM_version}/root/usr/lib64/clang/ /usr/lib64/clang/
+RUN ln -sf /opt/rh/devtoolset-8/root/usr/include/c++/ /usr/include/c++/
 # RUN ln -sf /opt/rh/llvm-toolset-${LLVM_version}/root/usr/lib64/llvm/ /usr/lib64/llvm/
 # RUN ln -sf /opt/rh/llvm-toolset-${LLVM_version}/root/usr/lib64/cmake/* /usr/lib64/cmake/
 # RUN ln -sf /opt/rh/llvm-toolset-${LLVM_version}/root/usr/include/clang/ /usr/include/clang/
