@@ -17,12 +17,19 @@ RUN rpm --import "http://springdale.princeton.edu/data/springdale/7/x86_64/os/RP
 RUN yum repolist
 #
 RUN yum -y update
-RUN yum -y install "llvm-toolset-${LLVM_version}" "llvm-toolset-${LLVM_version}-llvm-devel" "rh-nodejs${node_version}-nodejs"
+RUN yum -y install "llvm-toolset-${LLVM_version}" "llvm-toolset-${LLVM_version}-llvm-devel" "llvm-toolset-${LLVM_version}-libomp-devel" 
+RUN yum -y install "rh-nodejs${node_version}-nodejs"
 # Fix clang package, help find it LLVM libs
 RUN scl enable llvm-toolset-${LLVM_version} 'bash'
-RUN ln -sf /opt/rh/llvm-toolset-${LLVM_version}/root/usr/lib64/clang /usr/lib64/clang
 RUN ln -sf /opt/rh/llvm-toolset-${LLVM_version}/root/usr/lib64/*.so /usr/lib64/
 RUN ln -sf /opt/rh/llvm-toolset-${LLVM_version}/root/usr/lib64/*.so.* /usr/lib64/
+RUN ln -sf /opt/rh/llvm-toolset-${LLVM_version}/root/usr/lib64/clang/ /usr/lib64/clang/
+RUN ln -sf /opt/rh/llvm-toolset-${LLVM_version}/root/usr/lib64/llvm/ /usr/lib64/llvm/
+RUN ln -sf /opt/rh/llvm-toolset-${LLVM_version}/root/usr/lib64/cmake/* /usr/lib64/cmake/
+RUN ln -sf /opt/rh/llvm-toolset-${LLVM_version}/root/usr/include/clang/ /usr/include/clang/
+RUN ln -sf /opt/rh/llvm-toolset-${LLVM_version}/root/usr/include/clang-c/ /usr/include/clang-c/
+RUN ln -sf /opt/rh/llvm-toolset-${LLVM_version}/root/usr/include/llvm/ /usr/include/llvm/
+RUN ln -sf /opt/rh/llvm-toolset-${LLVM_version}/root/usr/include/llvm-c/ /usr/include/llvm-c/
 RUN clang --version
 #
 RUN node --version
