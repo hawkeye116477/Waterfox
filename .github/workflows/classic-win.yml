@@ -30,9 +30,9 @@ jobs:
           scoop install sccache llvm nasm --global
           mkdir -p ~\\scoop\\buckets\\my-bucket
           Copy-Item -Path $env:GITHUB_WORKSPACE\\build\\github-actions\\mozilla-build.json -Destination ~\scoop\buckets\my-bucket
-          scoop install my-bucket/mozilla-build
+          scoop install my-bucket/mozilla-build --global
       - name: Build
         run: |
           echo "$ENV:PATH"
           clang-cl --version
-          ~\scoop\apps\mozilla-build\current\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/build.sh"
+          C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/build.sh"
