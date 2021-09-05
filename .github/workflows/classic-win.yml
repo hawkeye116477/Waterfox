@@ -29,7 +29,7 @@ jobs:
           iwr -useb get.scoop.sh | iex
           scoop install sccache llvm nasm --global
           mkdir -p ~\\scoop\\buckets\\my-bucket
-          Copy-Item -Path $env:GITHUB_WORKSPACE\\build\\github-actions\\mozillabuild.json -Destination ~\scoop\buckets\my-bucket
+          Copy-Item -Path $env:GITHUB_WORKSPACE\\build\\github-actions\\mozilla-build.json -Destination ~\scoop\buckets\my-bucket
           scoop install my-bucket/mozilla-build
       - name: Build
         run: |
