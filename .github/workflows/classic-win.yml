@@ -17,18 +17,22 @@ jobs:
     steps:
       - name: Checkout branch
         uses: actions/checkout@v2
-      - name: Set build directory
+      - name: Set build directory and system path
         run: |
           $pattern = '[\\]'
           $BUILD_DIR = $env:GITHUB_WORKSPACE -replace $pattern, '/'
           echo "${BUILD_DIR}"
           echo "G_WORKSPACE=${BUILD_DIR}" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
-      - name : Install nasm
-        uses: ilammy/setup-nasm@v1
-      - name: Install MozillaBuild
+          echo "C:\msys64\mingw32\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+      - name: Install depends
         run: |
-          choco install mozillabuild
+          iwr -useb get.scoop.sh | iex
+          scoop install sccache llvm nasm --global
+          mkdir -p ~\\scoop\\buckets\\my-bucket
+          Copy-Item -Path $env:GITHUB_WORKSPACE\\build\\github-actions\\mozillabuild.json -Destination ~\scoop\buckets\my-bucket
+          scoop install my-bucket/mozilla-build
       - name: Build
         run: |
-          echo "C:\msys64\mingw32\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
+          echo "$ENV:PATH"
+          clang-cl --version
           c:\\mozilla-build\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/build.sh"
