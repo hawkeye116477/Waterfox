@@ -5,6 +5,6 @@
     "license": "MPL",
     "bin": [
         "start-shell.bat"
-    ]
+    ],
     "pre_install": "Remove-Item \"$dir\\`$*\" -Recurse"
 }
