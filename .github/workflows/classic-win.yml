@@ -23,7 +23,6 @@ jobs:
           $BUILD_DIR = $env:GITHUB_WORKSPACE -replace $pattern, '/'
           echo "${BUILD_DIR}"
           echo "G_WORKSPACE=${BUILD_DIR}" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
-          echo "MOZ_NO_RESET_PATH=1" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
           echo "C:\ProgramData\scoop\apps\llvm\current\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
       - name: Install depends
         run: |
