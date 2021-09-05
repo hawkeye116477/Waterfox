@@ -23,7 +23,7 @@ jobs:
           $BUILD_DIR = $env:GITHUB_WORKSPACE -replace $pattern, '/'
           echo "${BUILD_DIR}"
           echo "G_WORKSPACE=${BUILD_DIR}" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
-          echo "C:\msys64\mingw32\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          echo "C:\ProgramData\scoop\apps\llvm\current\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
       - name: Install depends
         run: |
           iwr -useb get.scoop.sh | iex
@@ -35,4 +35,4 @@ jobs:
         run: |
           echo "$ENV:PATH"
           clang-cl --version
-          c:\\mozilla-build\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/build.sh"
+          ~\scoop\apps\mozilla-build\current\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/build.sh"
