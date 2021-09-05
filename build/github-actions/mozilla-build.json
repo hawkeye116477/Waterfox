@@ -1,7 +1,10 @@
 {
     "version": "3.3",
     "homepage": "https://wiki.mozilla.org/MozillaBuild",
-    "url": "https://ftp.mozilla.org/pub/mozilla/libraries/win32/MozillaBuildSetup-3.3.exe",
+    "url": "https://ftp.mozilla.org/pub/mozilla/libraries/win32/MozillaBuildSetup-3.3.exe#/dl.7z",
     "license": "MPL",
+    "bin": [
+        "start-shell.bat"
+    ]
     "pre_install": "Remove-Item \"$dir\\`$*\" -Recurse"
 }
