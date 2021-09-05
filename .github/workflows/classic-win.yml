@@ -37,3 +37,6 @@ jobs:
       - name: Build
         run: |
           C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/build.sh"
+      - name: Package
+        run: |
+          C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/package.sh"         
