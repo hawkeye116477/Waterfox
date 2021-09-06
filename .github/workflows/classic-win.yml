@@ -17,6 +17,10 @@ jobs:
     steps:
       - name: Checkout branch
         uses: actions/checkout@v2
+      - name: Test
+        shell: bash
+        run: |
+          ls -l "/c/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Redist/MSVC"
       - name: Set build directory and system path
         run: |
           $pattern = '[\\]'
