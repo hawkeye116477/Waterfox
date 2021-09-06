@@ -30,6 +30,7 @@ jobs:
           mkdir -p ~\\scoop\\buckets\\my-bucket
           Copy-Item -Path $env:GITHUB_WORKSPACE\\build\\github-actions\\mozilla-build.json -Destination ~\scoop\buckets\my-bucket
           scoop install my-bucket/mozilla-build --global
+          Rename-Item -Path "C:\\ProgramData\\scoop\\shims\\start-shell" -NewName "mozilla-build"
       - name: Set system PATH variable
         shell: bash
         run:  sed -i 's/SET PATH=.*/&;C:\\Rust\\.cargo\\bin;C:\\ProgramData\\scoop\\shims/g' /c/ProgramData/scoop/apps/mozilla-build/current/start-shell.bat
@@ -40,9 +41,9 @@ jobs:
                 ~/AppData/Local/Mozilla/sccache/cache
             key: ${{ runner.os }}-${{ hashFiles('**/browser/config/version_display.txt') }}
       - name: Build
-        run:  C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/build.sh"
+        run:  mozilla-build "$Env:G_WORKSPACE/build/github-actions/build.sh"
       - name: Package
-        run:  C:\\ProgramData\\scoop\\apps\\mozilla-build\\current\\start-shell.bat "$Env:G_WORKSPACE/build/github-actions/package.sh"
+        run:  mozilla-build "$Env:G_WORKSPACE/build/github-actions/package.sh"
       - name: Upload artifact
         uses: actions/upload-artifact@v2
         with:
