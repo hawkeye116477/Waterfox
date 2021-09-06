@@ -20,7 +20,7 @@ jobs:
       - name: Test
         shell: bash
         run: |
-          ls -l "/c/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Redist/MSVC"
+          ls -l "/c/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Redist/MSVC/14.16.27012"
       - name: Set build directory and system path
         run: |
           $pattern = '[\\]'
