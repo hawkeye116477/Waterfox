@@ -13,14 +13,10 @@ env:
 
 jobs:
   windows:
-    runs-on: windows-latest
+    runs-on: windows-2016
     steps:
       - name: Checkout branch
         uses: actions/checkout@v2
-      - name: Test
-        shell: bash
-        run: |
-          ls -l "/c/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise/VC/Redist/MSVC/14.16.27012/x64"
       - name: Set build directory and system path
         run: |
           $pattern = '[\\]'
