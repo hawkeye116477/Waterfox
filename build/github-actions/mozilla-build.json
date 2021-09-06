@@ -6,5 +6,6 @@
     "bin": [
         "start-shell.bat"
     ],
+    "hash": "ac86e5794c6a99c25dee0b60720c7cfd9833ec64785c74838723179830749c9c",
     "pre_install": "Remove-Item \"$dir\\`$*\" -Recurse"
 }
