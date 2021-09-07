@@ -2,6 +2,7 @@ FROM centos:7
 ENV LLVM_version="7"
 ENV nasm_version="2.15.05"
 ENV node_version="10"
+ENV PATH="/opt/rh/devtoolset-7/root/usr/bin:${PATH}"
 #ENV PATH="/opt/rh/llvm-toolset-${LLVM_version}/root/usr/bin:${PATH}"
 #ENV PATH="/opt/rh/devtoolset-8/root/usr/bin:/opt/rh/llvm-toolset-${LLVM_version}/root/usr/bin:/opt/rh/rh-nodejs${node_version}/root/usr/bin:${PATH}"
 #ENV LD_LIBRARY_PATH="/opt/rh/devtoolset-8/root/usr/lib:/opt/rh/devtoolset-8/root/usr/lib64:/opt/rh/llvm-toolset-${LLVM_version}/root/usr/lib64:${LD_LIBRARY_PATH}"
