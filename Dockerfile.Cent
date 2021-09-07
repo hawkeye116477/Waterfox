@@ -1,21 +1,21 @@
 FROM centos:7
-ENV LLVM_version="8.0"
+ENV LLVM_version="7"
 ENV nasm_version="2.15.05"
 ENV node_version="10"
-ENV PATH="/opt/rh/devtoolset-8/root/usr/bin:/opt/rh/llvm-toolset-${LLVM_version}/root/usr/bin:/opt/rh/rh-nodejs${node_version}/root/usr/bin:${PATH}"
-ENV LD_LIBRARY_PATH="/opt/rh/devtoolset-8/root/usr/lib:/opt/rh/devtoolset-8/root/usr/lib64:/opt/rh/llvm-toolset-${LLVM_version}/root/usr/lib64:${LD_LIBRARY_PATH}"
+#ENV PATH="/opt/rh/devtoolset-8/root/usr/bin:/opt/rh/llvm-toolset-${LLVM_version}/root/usr/bin:/opt/rh/rh-nodejs${node_version}/root/usr/bin:${PATH}"
+#ENV LD_LIBRARY_PATH="/opt/rh/devtoolset-8/root/usr/lib:/opt/rh/devtoolset-8/root/usr/lib64:/opt/rh/llvm-toolset-${LLVM_version}/root/usr/lib64:${LD_LIBRARY_PATH}"
 RUN yum install -y "deltarpm" "centos-release-scl-rh" "epel-release"
 RUN yum -y install "perl(Env)" "autoconf" "automake" "asciidoc" "xmlto" "make" "xz" "wget"
 #RUN wget -O "/etc/yum.repos.d/hawkeye116477_bdepends.repo" "https://download.opensuse.org/repositories/home:hawkeye116477:waterfox:build-depends/CentOS_7/home:hawkeye116477:waterfox:build-depends.repo"
 #
 # Install Springdale SCL repo, which contains newer llvm toolchains (8, 9, 10 and 11)
-ENV SPRINGDALE_SCL="springdale-SCL-7-2.sdl7.1.noarch.rpm"
-RUN yum -y install "rpm2cpio" "bsdtar"
-RUN wget "http://springdale.princeton.edu/data/springdale/7/x86_64/os/Packages/${SPRINGDALE_SCL}"
-RUN rpm2cpio "${SPRINGDALE_SCL}" | bsdtar -xf -
-RUN rm -rf "${SPRINGDALE_SCL}"
-RUN rpm --import "http://springdale.princeton.edu/data/springdale/7/x86_64/os/RPM-GPG-KEY-springdale"
-RUN yum repolist
+#ENV SPRINGDALE_SCL="springdale-SCL-7-2.sdl7.1.noarch.rpm"
+#RUN yum -y install "rpm2cpio" "bsdtar"
+#RUN wget "http://springdale.princeton.edu/data/springdale/7/x86_64/os/Packages/${SPRINGDALE_SCL}"
+#RUN rpm2cpio "${SPRINGDALE_SCL}" | bsdtar -xf -
+#RUN rm -rf "${SPRINGDALE_SCL}"
+#RUN rpm --import "http://springdale.princeton.edu/data/springdale/7/x86_64/os/RPM-GPG-KEY-springdale"
+#RUN yum repolist
 #
 RUN yum -y update
 # RUN yum -y install "llvm-toolset-${LLVM_version}-clang" "llvm-toolset-${LLVM_version}-llvm-devel"
@@ -25,7 +25,7 @@ RUN clang --version
 #
 RUN node --version
 #
-RUN yum -y install "ccache" "which" "pkgconfig" "python2-devel" "python36" "alsa-lib-devel" "autoconf213" "pkgconfig(gl)" "pkgconfig(dbus-glib-1)" "rust" "cargo" "libnotify-devel" "libproxy-devel" "startup-notification-devel" "unzip" "zip" "pkgconfig(xt)" "yasm" "pkgconfig(gdk-x11-2.0)" "pkgconfig(glib-2.0)" "pkgconfig(gobject-2.0)" "pkgconfig(gtk+-2.0)" "pkgconfig(gtk+-3.0)" "pkgconfig(gtk+-unix-print-2.0)" "pkgconfig(gtk+-unix-print-3.0)" "libcurl-devel" "pkgconfig(libffi)" "pkgconfig(libpulse)" "pkgconfig(jack)" "libdrm-devel" "pkgconfig(gconf-2.0)" "git" "bzip2" "gcc-c++"
+RUN yum -y install "ccache" "which" "pkgconfig" "python2-devel" "python36" "alsa-lib-devel" "autoconf213" "pkgconfig(gl)" "pkgconfig(dbus-glib-1)" "rust" "cargo" "libnotify-devel" "libproxy-devel" "startup-notification-devel" "unzip" "zip" "pkgconfig(xt)" "yasm" "pkgconfig(gdk-x11-2.0)" "pkgconfig(glib-2.0)" "pkgconfig(gobject-2.0)" "pkgconfig(gtk+-2.0)" "pkgconfig(gtk+-3.0)" "pkgconfig(gtk+-unix-print-2.0)" "pkgconfig(gtk+-unix-print-3.0)" "libcurl-devel" "pkgconfig(libffi)" "pkgconfig(libpulse)" "pkgconfig(jack)" "libdrm-devel" "pkgconfig(gconf-2.0)" "git" "bzip2" "gcc-c++" "libstdc++-devel"
 RUN cargo install cbindgen
 # Build nasm
 RUN mkdir -p ~/nasm/
@@ -39,10 +39,10 @@ RUN make install
 WORKDIR "$HOME"
 RUN nasm --version
 RUN rm -rf ./nasm/*
-RUN mkdir -p /usr/lib/nasm-mozilla/bin
-RUN ln -sf /usr/bin/nasm /usr/lib/nasm-mozilla/bin/nasm
-RUN wget -O "/usr/bin/scl_enable" "https://raw.githubusercontent.com/hawkeye116477/Waterfox/classic_ga/build/github-actions/scl_enable"
+#RUN mkdir -p /usr/lib/nasm-mozilla/bin
+#RUN ln -sf /usr/bin/nasm /usr/lib/nasm-mozilla/bin/nasm
+#RUN wget -O "/usr/bin/scl_enable" "https://raw.githubusercontent.com/hawkeye116477/Waterfox/classic_ga/build/github-actions/scl_enable"
 # Enable the SCL for all bash scripts.
-ENV BASH_ENV=/usr/bin/scl_enable \
-     ENV=/usr/bin/scl_enable \
-     PROMPT_COMMAND=". /usr/bin/scl_enable"
+#ENV BASH_ENV=/usr/bin/scl_enable \
+     #ENV=/usr/bin/scl_enable \
+     #PROMPT_COMMAND=". /usr/bin/scl_enable"
