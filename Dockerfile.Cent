@@ -2,7 +2,7 @@ FROM centos:7
 ENV LLVM_version="7"
 ENV nasm_version="2.15.05"
 ENV node_version="10"
-ENV PATH="/opt/rh/llvm-toolset-${LLVM_version}/root/usr/bin:${PATH}"
+#ENV PATH="/opt/rh/llvm-toolset-${LLVM_version}/root/usr/bin:${PATH}"
 #ENV PATH="/opt/rh/devtoolset-8/root/usr/bin:/opt/rh/llvm-toolset-${LLVM_version}/root/usr/bin:/opt/rh/rh-nodejs${node_version}/root/usr/bin:${PATH}"
 #ENV LD_LIBRARY_PATH="/opt/rh/devtoolset-8/root/usr/lib:/opt/rh/devtoolset-8/root/usr/lib64:/opt/rh/llvm-toolset-${LLVM_version}/root/usr/lib64:${LD_LIBRARY_PATH}"
 RUN yum install -y "deltarpm" "centos-release-scl-rh" "epel-release"
@@ -21,12 +21,14 @@ RUN yum -y install "perl(Env)" "autoconf" "automake" "asciidoc" "xmlto" "make" "
 RUN yum -y update
 # RUN yum -y install "llvm-toolset-${LLVM_version}-clang" "llvm-toolset-${LLVM_version}-llvm-devel"
 RUN yum -y install "rh-nodejs${node_version}-nodejs"
-RUN yum -y install "llvm-toolset-${LLVM_version}-clang-devel" "llvm-toolset-${LLVM_version}-llvm-devel"
-RUN clang --version
+#RUN yum -y install "llvm-toolset-${LLVM_version}-clang-devel" "llvm-toolset-${LLVM_version}-llvm-devel"
+RUN yum -y install devtoolset-7-gcc devtoolset-7-gcc-c++ devtoolset-7-libstdc++-devel
+#RUN clang --version
+RUN gcc --version
 #
 #RUN node --version
 #
-RUN yum -y install "ccache" "which" "pkgconfig" "python2-devel" "python36" "alsa-lib-devel" "autoconf213" "pkgconfig(gl)" "pkgconfig(dbus-glib-1)" "rust" "cargo" "libnotify-devel" "libproxy-devel" "startup-notification-devel" "unzip" "zip" "pkgconfig(xt)" "yasm" "pkgconfig(gdk-x11-2.0)" "pkgconfig(glib-2.0)" "pkgconfig(gobject-2.0)" "pkgconfig(gtk+-2.0)" "pkgconfig(gtk+-3.0)" "pkgconfig(gtk+-unix-print-2.0)" "pkgconfig(gtk+-unix-print-3.0)" "libcurl-devel" "pkgconfig(libffi)" "pkgconfig(libpulse)" "pkgconfig(jack)" "libdrm-devel" "pkgconfig(gconf-2.0)" "git" "bzip2" "gcc-c++" "libstdc++-devel"
+RUN yum -y install "ccache" "which" "pkgconfig" "python2-devel" "python36" "alsa-lib-devel" "autoconf213" "pkgconfig(gl)" "pkgconfig(dbus-glib-1)" "rust" "cargo" "libnotify-devel" "libproxy-devel" "startup-notification-devel" "unzip" "zip" "pkgconfig(xt)" "yasm" "pkgconfig(gdk-x11-2.0)" "pkgconfig(glib-2.0)" "pkgconfig(gobject-2.0)" "pkgconfig(gtk+-2.0)" "pkgconfig(gtk+-3.0)" "pkgconfig(gtk+-unix-print-2.0)" "pkgconfig(gtk+-unix-print-3.0)" "libcurl-devel" "pkgconfig(libffi)" "pkgconfig(libpulse)" "pkgconfig(jack)" "libdrm-devel" "pkgconfig(gconf-2.0)" "git" "bzip2"
 RUN cargo install cbindgen
 # Build nasm
 RUN mkdir -p ~/nasm/
