@@ -1,12 +1,12 @@
 FROM centos:7
-ENV LLVM_version="7"
+ENV LLVM_version="9.0"
 ENV nasm_version="2.15.05"
 ENV node_version="10"
-ENV PATH="/opt/rh/devtoolset-9/root/usr/bin:${PATH}"
-#ENV PATH="/opt/rh/llvm-toolset-${LLVM_version}/root/usr/bin:${PATH}"
+#ENV PATH="/opt/rh/devtoolset-9/root/usr/bin:${PATH}"
+ENV PATH="/opt/rh/llvm-toolset-${LLVM_version}/root/usr/bin:/opt/rh/devtoolset-9/root/usr/bin:${PATH}"
 #ENV PATH="/opt/rh/devtoolset-8/root/usr/bin:/opt/rh/llvm-toolset-${LLVM_version}/root/usr/bin:/opt/rh/rh-nodejs${node_version}/root/usr/bin:${PATH}"
 #ENV LD_LIBRARY_PATH="/opt/rh/devtoolset-9/root/usr/lib:/opt/rh/devtoolset-9/root/usr/lib64:/opt/rh/llvm-toolset-${LLVM_version}/root/usr/lib64:${LD_LIBRARY_PATH}"
-ENV LD_LIBRARY_PATH="/opt/rh/devtoolset-9/root/usr/lib:/opt/rh/devtoolset-9/root/usr/lib64:${LD_LIBRARY_PATH}"
+ENV LD_LIBRARY_PATH="/opt/rh/devtoolset-9/root/usr/lib:/opt/rh/devtoolset-9/root/usr/lib64:/opt/rh/llvm-toolset-${LLVM_version}/root/usr/lib64:${LD_LIBRARY_PATH}"
 ENV C_INCLUDE_PATH="/opt/rh/devtoolset-9/root/usr/lib/gcc/x86_64-redhat-linux/9/include:/usr/local/include:/usr/include"
 ENV CPLUS_INCLUDE_PATH="/opt/rh/devtoolset-9/root/usr/include/c++/9:/usr/local/include:/usr/include"
 RUN yum install -y "deltarpm" "centos-release-scl-rh" "epel-release"
@@ -14,18 +14,18 @@ RUN yum -y install "perl(Env)" "autoconf" "automake" "asciidoc" "xmlto" "make" "
 #RUN wget -O "/etc/yum.repos.d/hawkeye116477_bdepends.repo" "https://download.opensuse.org/repositories/home:hawkeye116477:waterfox:build-depends/CentOS_7/home:hawkeye116477:waterfox:build-depends.repo"
 #
 # Install Springdale SCL repo, which contains newer llvm toolchains (8, 9, 10 and 11)
-#ENV SPRINGDALE_SCL="springdale-SCL-7-2.sdl7.1.noarch.rpm"
-#RUN yum -y install "rpm2cpio" "bsdtar"
-#RUN wget "http://springdale.princeton.edu/data/springdale/7/x86_64/os/Packages/${SPRINGDALE_SCL}"
-#RUN rpm2cpio "${SPRINGDALE_SCL}" | bsdtar -xf -
-#RUN rm -rf "${SPRINGDALE_SCL}"
-#RUN rpm --import "http://springdale.princeton.edu/data/springdale/7/x86_64/os/RPM-GPG-KEY-springdale"
-#RUN yum repolist
+ENV SPRINGDALE_SCL="springdale-SCL-7-2.sdl7.1.noarch.rpm"
+RUN yum -y install "rpm2cpio" "bsdtar"
+RUN wget "http://springdale.princeton.edu/data/springdale/7/x86_64/os/Packages/${SPRINGDALE_SCL}"
+RUN rpm2cpio "${SPRINGDALE_SCL}" | bsdtar -xf -
+RUN rm -rf "${SPRINGDALE_SCL}"
+RUN rpm --import "http://springdale.princeton.edu/data/springdale/7/x86_64/os/RPM-GPG-KEY-springdale"
+RUN yum repolist
 #
 RUN yum -y update
 # RUN yum -y install "llvm-toolset-${LLVM_version}-clang" "llvm-toolset-${LLVM_version}-llvm-devel"
 RUN yum -y install "rh-nodejs${node_version}-nodejs"
-#RUN yum -y install "llvm-toolset-${LLVM_version}-clang-devel" "llvm-toolset-${LLVM_version}-llvm-devel"
+RUN yum -y install "llvm-toolset-${LLVM_version}-clang-devel" "llvm-toolset-${LLVM_version}-llvm-devel"
 RUN yum -y install devtoolset-9-gcc devtoolset-9-gcc-c++ devtoolset-9-libstdc++-devel
 #RUN clang --version
 RUN gcc --version
