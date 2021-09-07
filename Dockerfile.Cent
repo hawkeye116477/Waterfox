@@ -27,7 +27,7 @@ RUN yum -y update
 RUN yum -y install "rh-nodejs${node_version}-nodejs"
 RUN yum -y install "llvm-toolset-${LLVM_version}-clang-devel" "llvm-toolset-${LLVM_version}-llvm-devel"
 RUN yum -y install devtoolset-9-gcc devtoolset-9-gcc-c++ devtoolset-9-libstdc++-devel
-#RUN clang --version
+RUN clang --version
 RUN gcc --version
 #
 #RUN node --version
