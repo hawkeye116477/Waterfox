@@ -31,7 +31,7 @@ if test $(uname -s) = MINGW32_NT-6.2; then
     mk_add_options MOZ_MAKE_FLAGS=-j${X}
 else
     ac_add_options --enable-optimize="-O2 -march=nocona -mtune=nocona -w"
-    ac_add_options --with-ccache=ccache
+    #ac_add_options --with-ccache=ccache
     X=$(getconf NPROCESSORS_ONLN 2>/dev/null || getconf _NPROCESSORS_ONLN 2>/dev/null)
     mk_add_options MOZ_MAKE_FLAGS=-j${X%.*}
 fi
