@@ -24,7 +24,7 @@ RUN yum -y install "rh-nodejs${node_version}-nodejs"
 RUN yum -y install "llvm-toolset-${LLVM_version}-clang-devel" "llvm-toolset-${LLVM_version}-llvm-devel"
 RUN clang --version
 #
-RUN node --version
+#RUN node --version
 #
 RUN yum -y install "ccache" "which" "pkgconfig" "python2-devel" "python36" "alsa-lib-devel" "autoconf213" "pkgconfig(gl)" "pkgconfig(dbus-glib-1)" "rust" "cargo" "libnotify-devel" "libproxy-devel" "startup-notification-devel" "unzip" "zip" "pkgconfig(xt)" "yasm" "pkgconfig(gdk-x11-2.0)" "pkgconfig(glib-2.0)" "pkgconfig(gobject-2.0)" "pkgconfig(gtk+-2.0)" "pkgconfig(gtk+-3.0)" "pkgconfig(gtk+-unix-print-2.0)" "pkgconfig(gtk+-unix-print-3.0)" "libcurl-devel" "pkgconfig(libffi)" "pkgconfig(libpulse)" "pkgconfig(jack)" "libdrm-devel" "pkgconfig(gconf-2.0)" "git" "bzip2" "gcc-c++" "libstdc++-devel"
 RUN cargo install cbindgen
