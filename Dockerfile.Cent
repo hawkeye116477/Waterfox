@@ -2,11 +2,11 @@ FROM centos:7
 ENV LLVM_version="8.0"
 ENV nasm_version="2.15.05"
 ENV node_version="10"
-ENV PATH="/opt/rh/devtoolset-8/root/usr/bin:/opt/rh/llvm-toolset-${LLVM_version}/root/usr/bin:opt/rh/rh-nodejs${node_version}/root/usr/bin:${PATH}"
+ENV PATH="/opt/rh/devtoolset-8/root/usr/bin:/opt/rh/llvm-toolset-${LLVM_version}/root/usr/bin:/opt/rh/rh-nodejs${node_version}/root/usr/bin:${PATH}"
 ENV LD_LIBRARY_PATH="/opt/rh/devtoolset-8/root/usr/lib:/opt/rh/devtoolset-8/root/usr/lib64:/opt/rh/llvm-toolset-${LLVM_version}/root/usr/lib64:${LD_LIBRARY_PATH}"
 RUN yum install -y "deltarpm" "centos-release-scl-rh" "epel-release"
 RUN yum -y install "perl(Env)" "autoconf" "automake" "asciidoc" "xmlto" "make" "xz" "wget"
-RUN wget -O "/etc/yum.repos.d/hawkeye116477_bdepends.repo" "https://download.opensuse.org/repositories/home:hawkeye116477:waterfox:build-depends/CentOS_7/home:hawkeye116477:waterfox:build-depends.repo"
+#RUN wget -O "/etc/yum.repos.d/hawkeye116477_bdepends.repo" "https://download.opensuse.org/repositories/home:hawkeye116477:waterfox:build-depends/CentOS_7/home:hawkeye116477:waterfox:build-depends.repo"
 #
 # Install Springdale SCL repo, which contains newer llvm toolchains (8, 9, 10 and 11)
 ENV SPRINGDALE_SCL="springdale-SCL-7-2.sdl7.1.noarch.rpm"
@@ -20,7 +20,7 @@ RUN yum repolist
 RUN yum -y update
 # RUN yum -y install "llvm-toolset-${LLVM_version}-clang" "llvm-toolset-${LLVM_version}-llvm-devel"
 RUN yum -y install "rh-nodejs${node_version}-nodejs"
-RUN yum -y install "llvm-toolset-${LLVM_version}-clang-devel" "llvm-devel"
+RUN yum -y install "llvm-toolset-${LLVM_version}-clang-devel" "llvm-toolset-${LLVM_version}-llvm-devel"
 RUN clang --version
 #
 RUN node --version
@@ -41,8 +41,8 @@ RUN nasm --version
 RUN rm -rf ./nasm/*
 RUN mkdir -p /usr/lib/nasm-mozilla/bin
 RUN ln -sf /usr/bin/nasm /usr/lib/nasm-mozilla/bin/nasm
-# RUN wget -O "/usr/bin/scl_enable" "https://raw.githubusercontent.com/hawkeye116477/Waterfox/classic_ga/build/github-actions/scl_enable"
-# # Enable the SCL for all bash scripts.
-# ENV BASH_ENV=/usr/bin/scl_enable \
-#     ENV=/usr/bin/scl_enable \
-#     PROMPT_COMMAND=". /usr/bin/scl_enable"
+RUN wget -O "/usr/bin/scl_enable" "https://raw.githubusercontent.com/hawkeye116477/Waterfox/classic_ga/build/github-actions/scl_enable"
+# Enable the SCL for all bash scripts.
+ENV BASH_ENV=/usr/bin/scl_enable \
+     ENV=/usr/bin/scl_enable \
+     PROMPT_COMMAND=". /usr/bin/scl_enable"
