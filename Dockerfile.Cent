@@ -39,6 +39,7 @@ RUN make install
 WORKDIR "$HOME"
 RUN nasm --version
 RUN rm -rf ./nasm/*
+RUN yum clean all
 #RUN mkdir -p /usr/lib/nasm-mozilla/bin
 #RUN ln -sf /usr/bin/nasm /usr/lib/nasm-mozilla/bin/nasm
 #RUN wget -O "/usr/bin/scl_enable" "https://raw.githubusercontent.com/hawkeye116477/Waterfox/classic_ga/build/github-actions/scl_enable"
