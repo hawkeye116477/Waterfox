@@ -37,9 +37,6 @@
  */
 
 
-static char *RCSSTRING __UNUSED__ ="$Id: r_log.c,v 1.10 2008/11/25 22:25:18 adamcain Exp $";
-
-
 #ifdef LINUX
 #define _BSD_SOURCE
 #endif
