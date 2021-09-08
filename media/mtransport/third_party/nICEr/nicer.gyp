@@ -119,8 +119,6 @@
                 "./src/util/cb_args.h",
                 "./src/util/ice_util.c",
                 "./src/util/ice_util.h",
-                "./src/util/mbslen.c",
-                "./src/util/mbslen.h",
 
 
           ],
@@ -188,6 +186,7 @@
               [ 'OS == "win"', {
                 'defines' : [
                     'WIN32',
+                    '_WINSOCK_DEPRECATED_NO_WARNINGS',
                     'USE_ICE',
                     'USE_TURN',
                     'USE_RFC_3489_BACKWARDS_COMPATIBLE',
