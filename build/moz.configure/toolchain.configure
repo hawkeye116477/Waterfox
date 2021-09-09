@@ -351,7 +351,7 @@ def get_compiler_info(compiler, language):
         #endif
         #elif defined(__clang__)
         %COMPILER "clang"
-        #  if __has_warning("-Wunguarded-availability")
+        #  if __has_warning("-Wtautological-constant-compare")
         %VERSION __clang_major__.__clang_minor__.__clang_patchlevel__
         #  endif
         #elif defined(__GNUC__)
