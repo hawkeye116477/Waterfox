@@ -1,9 +1,9 @@
 FROM centos:7
-ENV LLVM_version="7.0"
-ENV nasm_version="2.15.05"
-ENV git_version="2.33.0"
-ENV PATH="/opt/rh/llvm-toolset-${LLVM_version}/root/usr/bin:${PATH}"
-ENV LD_LIBRARY_PATH="/opt/rh/llvm-toolset-${LLVM_version}/root/usr/lib64:${LD_LIBRARY_PATH}"
+ENV llvm_ver="7.0"
+ENV nasm_ver="2.15.05"
+ENV git_ver="2.33.0"
+ENV PATH="/opt/rh/llvm-toolset-${llvm_ver}/root/usr/bin:${PATH}"
+ENV LD_LIBRARY_PATH="/opt/rh/llvm-toolset-${llvm_ver}/root/usr/lib64:${LD_LIBRARY_PATH}"
 RUN yum -y install "deltarpm" "centos-release-scl-rh" "epel-release"
 RUN yum -y install "perl(Env)" "autoconf" "automake" "make" "xz" "wget"
 #
@@ -17,15 +17,15 @@ RUN yum -y install "perl(Env)" "autoconf" "automake" "make" "xz" "wget"
 # RUN yum repolist
 #
 RUN yum -y update
-RUN yum -y install "llvm-toolset-${LLVM_version}-clang" "llvm-toolset-${LLVM_version}-llvm-devel"
+RUN yum -y install "llvm-toolset-${llvm_ver}-clang" "llvm-toolset-${llvm_ver}-llvm-devel"
 RUN clang --version
 RUN yum -y install "ccache" "which" "pkgconfig" "python2-devel" "python36" "alsa-lib-devel" "autoconf213" "pkgconfig(gl)" "pkgconfig(dbus-glib-1)" "rust" "cargo" "libnotify-devel" "libproxy-devel" "startup-notification-devel" "unzip" "zip" "pkgconfig(xt)" "yasm" "pkgconfig(gdk-x11-2.0)" "pkgconfig(glib-2.0)" "pkgconfig(gobject-2.0)" "pkgconfig(gtk+-2.0)" "pkgconfig(gtk+-3.0)" "pkgconfig(gtk+-unix-print-2.0)" "pkgconfig(gtk+-unix-print-3.0)" "libcurl-devel" "pkgconfig(libffi)" "pkgconfig(libpulse)" "pkgconfig(jack)" "libdrm-devel" "pkgconfig(gconf-2.0)" "bzip2"
 # Build nasm
 RUN mkdir -p ~/nasm/
 WORKDIR "$HOME/nasm"
-RUN wget "https://www.nasm.us/pub/nasm/releasebuilds/${nasm_version}/nasm-${nasm_version}.tar.xz"
-RUN tar -xf nasm-${nasm_version}.tar.xz
-WORKDIR "$HOME/nasm/nasm-${nasm_version}"
+RUN wget "https://www.nasm.us/pub/nasm/releasebuilds/${nasm_ver}/nasm-${nasm_ver}.tar.xz"
+RUN tar -xf nasm-${nasm_ver}.tar.xz
+WORKDIR "$HOME/nasm/nasm-${nasm_ver}"
 RUN ./configure --prefix=/usr
 RUN make all
 RUN make install
@@ -35,9 +35,9 @@ RUN yum clean all
 # Build git (we need newer git version than it's on repo, cuz otherwise it will download using REST API and we won't receive source info)
 RUN mkdir -p ~/git_pkg/
 WORKDIR "$HOME/git_pkg"
-RUN wget "https://mirrors.edge.kernel.org/pub/software/scm/git/git-${git_version}.tar.xz"
-RUN tar -xf git-${git_version}.tar.xz
-WORKDIR "$HOME/git_pkg/git-${git_version}"
+RUN wget "https://mirrors.edge.kernel.org/pub/software/scm/git/git-${git_ver}.tar.xz"
+RUN tar -xf git-${git_ver}.tar.xz
+WORKDIR "$HOME/git_pkg/git-${git_ver}"
 RUN make configure
 RUN ./configure --prefix=/usr
 RUN make all
