@@ -31,7 +31,9 @@ jobs:
       - name: Package
         run: |
           ./mach package
-          cd ./objdir-*/dist/ || exit
+          mkdir ./dist/
+          mv ./objdir-*/dist/waterfox*.tar.bz2 ./dist/
+          cd ./dist/ || exit
           sha256sum waterfox*.tar.bz2 | tee "$(basename waterfox*.tar.bz2).sha256"
         if: env.ENABLE_ARTIFACTS_MODE == 'true'
       - name: Upload Linux artifact
@@ -39,8 +41,8 @@ jobs:
         with:
           name: Artifact_Classic_Linux_${{ github.run_id }}
           path: |
-            ./objdir-*/dist/waterfox*.tar.bz2
-            ./objdir-*/dist/waterfox*.tar.bz2.sha256
+            ./dist/waterfox*.tar.bz2
+            ./dist/waterfox*.tar.bz2.sha256
         if: env.ENABLE_ARTIFACTS_MODE == 'true'
   build-mac:
     runs-on: macos-10.15
@@ -71,7 +73,9 @@ jobs:
       - name: Package
         run: |
           ./mach package
-          cd ./objdir-*/dist/ || exit
+          mkdir ./dist/
+          mv ./objdir-*/dist/waterfox*.dmg ./dist/
+          cd ./dist/ || exit
           shasum -a 256 waterfox*.dmg | tee "$(basename waterfox*.dmg).sha256"
         if: env.ENABLE_ARTIFACTS_MODE == 'true'
       - name: Upload macOS artifact
@@ -79,8 +83,8 @@ jobs:
         with:
           name: Artifact_Classic_macOS_${{ github.run_id }}
           path: |
-            ./objdir-*/dist/waterfox*.dmg
-            ./objdir-*/dist/waterfox*.dmg.sha256
+            ./dist/waterfox*.dmg
+            ./dist/waterfox*.dmg.sha256
         if: env.ENABLE_ARTIFACTS_MODE == 'true'
   build-windows:
     runs-on: windows-2016
@@ -118,6 +122,6 @@ jobs:
         with:
           name: Artifact_Classic_Windows_${{ github.run_id }}
           path: |
-            ./objdir-*/dist/waterfox*.zip
-            ./objdir-*/dist/waterfox*.zip.sha256
+            ./dist/waterfox*.zip
+            ./dist/waterfox*.zip.sha256
         if: env.ENABLE_ARTIFACTS_MODE == 'true'
