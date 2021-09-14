@@ -14,7 +14,7 @@ jobs:
   build-linux:
     runs-on: ubuntu-18.04
     container:
-      image: ghcr.io/waterfoxco/waterfox_docker_img:latest
+      image: ghcr.io/hawkeye116477/waterfox_docker_img:latest
     steps:
       - name: Checkout branch
         uses: actions/checkout@v2
@@ -55,7 +55,7 @@ jobs:
       - name: Get SDK
         run: |
           wget https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.12.sdk.tar.xz
-          tar -xvf MacOSX10.12.sdk.tar.xz
+          tar -xvf MacOSX10.12.sdk.tar.xz -C ../
       - name: Cache for macOS
         uses: actions/cache@v2
         with:
