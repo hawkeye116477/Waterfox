@@ -2,8 +2,8 @@ name: Build Classic for Release
 
 on:
   push:
-    branches:
-      - classic
+    tags:
+      - "*-classic"
   workflow_dispatch: null
 
 env:
