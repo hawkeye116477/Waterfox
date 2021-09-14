@@ -44,18 +44,12 @@ jobs:
     steps:
       - name: Checkout branch
         uses: actions/checkout@v2
-      - name: Set up Xcode version
-        uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: "11.2.1"
       - name: Install depends
         run: |
+          sudo xcode-select -s "/Applications/Xcode_10.3.app"
           brew update
           brew install autoconf@2.13 ccache make nasm yasm
-      - name: Get SDK
-        run: |
-          wget https://github.com/phracker/MacOSX-SDKs/releases/download/11.3/MacOSX10.12.sdk.tar.xz
-          tar -xvf MacOSX10.12.sdk.tar.xz -C ../
+          ls -R "/Applications/Xcode_10.3.app"
       - name: Cache for macOS
         uses: actions/cache@v2
         with:
