@@ -8,7 +8,6 @@ on:
 
 env:
   ENABLE_ARTIFACTS_MODE: "true"
-  MOZCONFIG: "./.mozconfig-ga"
   SHELL: "/bin/bash"
 
 jobs:
