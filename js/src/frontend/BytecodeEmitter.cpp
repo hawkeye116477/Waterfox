@@ -3707,22 +3707,6 @@ BytecodeEmitter::reportExtraWarning(ParseNode* pn, unsigned errorNumber, ...)
 }
 
 bool
-BytecodeEmitter::reportStrictModeError(ParseNode* pn, unsigned errorNumber, ...)
-{
-    TokenPos pos = pn ? pn->pn_pos : tokenStream().currentToken().pos;
-
-    va_list args;
-    va_start(args, errorNumber);
-    // FIXME: parser.tokenStream() should be a TokenStreamAnyChars for bug 1351107,
-    // but caused problems, cf. bug 1363116.
-    bool result = parser.tokenStream()
-                        .reportStrictModeErrorNumberVA(nullptr, pos.begin, sc->strict(),
-                                                       errorNumber, args);
-    va_end(args);
-    return result;
-}
-
-bool
 BytecodeEmitter::emitNewInit(JSProtoKey key)
 {
     const size_t len = 1 + UINT32_INDEX_LEN;

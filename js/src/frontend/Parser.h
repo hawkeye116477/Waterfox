@@ -198,8 +198,6 @@ class ParserBase : public StrictModeGetter
 
     void addTelemetry(DeprecatedLanguageExtension e);
 
-    bool warnOnceAboutForEach();
-
     bool allowsForEachIn() {
 #if !JS_HAS_FOR_EACH_IN
         return false;
@@ -496,6 +494,8 @@ class Parser final : public ParserBase, private JS::AutoGCRooter
     MOZ_MUST_USE bool warningAt(uint32_t offset, unsigned errorNumber, ...);
 
     bool warnOnceAboutExprClosure();
+
+    bool warnOnceAboutForEach();
 
     /*
      * If extra warnings are enabled, report the given warning at the current

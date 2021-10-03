@@ -10366,8 +10366,9 @@ Parser<ParseHandler, CharT>::warnOnceAboutExprClosure()
     return true;
 }
 
+template <class ParseHandler, typename CharT>
 bool
-ParserBase::warnOnceAboutForEach()
+Parser<ParseHandler, CharT>::warnOnceAboutForEach()
 {
     if (context->helperThread())
         return true;
