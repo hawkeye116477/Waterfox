@@ -34,10 +34,10 @@ struct JSContext;
 namespace js {
 
 class ArrayObject;
-class MatchPairs;
 class RegExpCompartment;
 class RegExpShared;
 class RegExpStatics;
+class VectorMatchPairs;
 
 using RootedRegExpShared = JS::Rooted<RegExpShared*>;
 using HandleRegExpShared = JS::Handle<RegExpShared*>;
@@ -165,12 +165,12 @@ class RegExpShared : public gc::TenuredCell
     static RegExpRunStatus executeAtom(MutableHandleRegExpShared re,
                                        HandleLinearString input,
                                        size_t start,
-                                       MatchPairs* matches);
+                                       VectorMatchPairs* matches);
 
     // Execute this RegExp on input starting from searchIndex, filling in matches.
     static RegExpRunStatus execute(JSContext* cx, MutableHandleRegExpShared res,
                                    HandleLinearString input, size_t searchIndex,
-                                   MatchPairs* matches);
+                                   VectorMatchPairs* matches);
 
     // Register a table with this RegExpShared, and take ownership.
     bool addTable(JitCodeTable table) {
