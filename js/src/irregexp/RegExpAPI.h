@@ -37,7 +37,7 @@ bool CompilePattern(JSContext* cx, MutableHandleRegExpShared re,
 
 RegExpRunStatus Execute(JSContext* cx, MutableHandleRegExpShared re,
                         HandleLinearString input, size_t start,
-                        MatchPairs* matches);
+                        VectorMatchPairs* matches);
 
 }  // namespace irregexp
 }  // namespace js

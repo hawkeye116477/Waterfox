@@ -629,7 +629,7 @@ bool CompilePattern(JSContext* cx, MutableHandleRegExpShared re,
 template <typename CharT>
 RegExpRunStatus ExecuteRaw(jit::JitCode* code, const CharT* chars,
                            size_t length, size_t startIndex,
-                           MatchPairs* matches) {
+                           VectorMatchPairs* matches) {
   InputOutputData data(chars, chars + length, startIndex, matches);
 
   static_assert(RegExpRunStatus_Error ==
@@ -649,7 +649,7 @@ RegExpRunStatus ExecuteRaw(jit::JitCode* code, const CharT* chars,
 
 RegExpRunStatus Interpret(JSContext* cx, MutableHandleRegExpShared re,
                           HandleLinearString input, size_t startIndex,
-                          MatchPairs* matches) {
+                          VectorMatchPairs* matches) {
   MOZ_ASSERT(re->getByteCode(input->hasLatin1Chars()));
 
   HandleScope handleScope(cx->isolate);
@@ -677,7 +677,7 @@ RegExpRunStatus Interpret(JSContext* cx, MutableHandleRegExpShared re,
 
 RegExpRunStatus Execute(JSContext* cx, MutableHandleRegExpShared re,
                         HandleLinearString input, size_t startIndex,
-                        MatchPairs* matches) {
+                        VectorMatchPairs* matches) {
   bool latin1 = input->hasLatin1Chars();
   jit::JitCode* jitCode = re->getJitCode(latin1);
   bool isCompiled = !!jitCode;
