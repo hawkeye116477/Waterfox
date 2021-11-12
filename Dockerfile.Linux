@@ -1,0 +1,9 @@
+#centos:7
+FROM ghcr.io/waterfoxco/waterfox-classic_docker_img:latest
+# Install packages for releases based on 78+
+RUN cargo install cbindgen
+RUN wget -qO- https://rpm.nodesource.com/setup_14.x | bash -
+RUN yum install -y nodejs
+RUN node --version
+#RUN rustup default 1.56.1-x86_64-unknown-linux-gnu
+#RUN cargo --version
