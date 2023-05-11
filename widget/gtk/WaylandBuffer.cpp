@@ -261,7 +261,7 @@ void WaylandBufferSHM::DumpToFile(const char* aHint) {
 
 /* static */
 RefPtr<WaylandBufferDMABUF> WaylandBufferDMABUF::Create(
-    const LayoutDeviceIntSize& aSize, GLContext* aGL) {
+    const LayoutDeviceIntSize& aSize, gl::GLContext* aGL) {
   RefPtr<WaylandBufferDMABUF> buffer = new WaylandBufferDMABUF(aSize);
 
   const auto flags =
